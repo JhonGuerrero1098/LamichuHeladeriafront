@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferreteria</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Ferreteria</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active" data-section="dashboard"> Dashboard</a></li>
+                <li><a href="#" data-section="inventario"> Inventario</a></li>
+                <li><a href="#" data-section="clientes"> Clientes</a></li>
+                <li><a href="#" data-section="pos"> Pos > Punto de venta (POS)</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h2 id="section-title">Dashboard</h2>
+                <div class="user-profile">
+                    <span>Admin Ferreteria</span>
+                </div>
+            </header>
+            <section class="content-body">
+                <div class="card">
+                    <h3> Bienvenido </h3>
+                    <p> Selecciona una opcion del menu para administrar productos, clientes o realizar ventas.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

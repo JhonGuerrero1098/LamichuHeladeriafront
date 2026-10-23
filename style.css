@@ -1,0 +1,103 @@
+*
+{
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+body
+{
+    background-color: #f4f6f9;
+    color: #333;
+}
+.app-container
+{
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+.sidebar
+{
+    width: 260px;
+    background-color: #1e293b;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar-header 
+{
+    padding: 20px;
+    background-color: #0f172a;
+    text-align: center;
+}
+.sidebar-header h2
+{
+    font-size: 1.2rem;
+    color: #38bdf8;
+}
+.nav-links 
+{
+    list-style: none;
+    padding: 20px 0;
+}
+.nav-links li a
+{
+    display: block;
+    padding: 15px 25px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.nav-links li a:hover,
+.nav-links li a.active
+{
+    background-color: #334155;
+    color: #fff;
+    border-left: 4px solid #38bdf8;
+}
+.main-content
+{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.topbar
+{
+    height: 70px;
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+.topbar h2
+{
+    font-size: 1.4rem;
+    color: #1e293b;
+}
+.user-profile
+{
+    font-weight: 600;
+    color: #64748b;
+}
+.content-body
+{
+    padding: 30px;
+}
+.card
+{
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.card h3
+{
+    margin-bottom: 10px;
+    color: #1e293b;
+}

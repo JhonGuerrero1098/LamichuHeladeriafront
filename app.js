@@ -1,0 +1,504 @@
+// 1. Validar si el usuario ha iniciado sesión antes de permitir cargar la página
+const usuarioActual = JSON.parse(localStorage.getItem('usuarioLogueado'));
+if (!usuarioActual) {
+    // Si no hay sesión activa, redirigir automáticamente al login
+    window.location.href = 'login.html';
+}
+
+// 
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sectionTitle = document.getElementById('section-title');
+    const contentBody = document.querySelector('.content-body');
+
+    // Mensaje en consola con el rol del usuario conectado
+    console.log(`Usuario conectado con éxito: ${usuarioActual.nombreCompleto} (Rol: ${usuarioActual.idRol === 1 ? 'Administrador' : 'Cajero'})`);
+
+    // Restricciones según el rol al cargar la página (Ocultar opciones del menú lateral)
+    if (usuarioActual.idRol === 2) {
+        navLinks.forEach(link => {
+            const seccion = link.getAttribute('data-section');
+            // Si el rol es cajero, ocultamos la opción de clientes (puedes ajustar o agregar más aquí)
+            if (seccion === 'clientes') {
+                link.parentElement.style.display = 'none'; 
+            }
+        });
+    }
+
+    // Configuración de la navegación del menú 
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Obtener la sección seleccionada
+            const section = link.getAttribute('data-section');
+
+            // Bloqueo de seguridad por si intentan forzar la vista por cajero
+            if (usuarioActual.idRol === 2 && section === 'clientes') {
+                alert('Acceso denegado para este rol.');
+                return;
+            }
+
+            // Quitar la clase 'active' de todos los enlaces y ponerla en el presionado
+            navLinks.forEach(item => item.classList.remove('active'));
+            link.classList.add('active');
+
+            // Cambiar el título superior y el contenido según la opción
+            switch (section) {
+                case 'dashboard':
+                    sectionTitle.textContent = 'Dashboard';
+                    contentBody.innerHTML = `
+                        <div class="card">
+                            <h3>Bienvenido al Sistema de Gestión, ${usuarioActual.nombreCompleto || 'Usuario'}</h3>
+                            <p>Selecciona una opción del menú lateral para administrar productos, clientes o realizar ventas.</p>
+                        </div>
+                    `;
+                    break;
+
+                case 'inventario':
+    sectionTitle.textContent = 'Inventario de productos';
+    contentBody.innerHTML = `
+        <div class="card" id="card-formulario-producto" style="margin-bottom: 20px; display: none;">
+            <h3 id="titulo-form-productos">Editar Producto</h3>
+            <form id="form-editar-producto" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
+                <input type="hidden" id="edit-id">
+                <input type="hidden" id="edit-stock-original">
+                <input type="text" id="edit-nombre" placeholder="Nombre del producto" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <input type="number" id="edit-precio" placeholder="Precio" step="0.01" required style="padding: 8px; flex: 1; min-width: 120px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <input type="number" id="edit-stock" placeholder="Stock a agregar" required style="padding: 8px; flex: 1; min-width: 100px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <input type="text" id="edit-categoria" placeholder="Categoría" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <input type="text" id="edit-descripcion" placeholder="Descripción del producto" style="padding: 8px; flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <button type="submit" style="padding: 8px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; cursor: pointer;">Actualizar</button>
+                <button type="button" id="btn-cancelar-edit" style="padding: 8px 15px; background-color: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+            </form>
+        </div>
+        <div class="card">
+            <h3>Productos en stock</h3>
+            <div id="contenedor-tabla">
+                <p style="padding: 10px; color: #64748b;">Cargando productos...</p>
+            </div>
+        </div>
+    `;
+
+    function cargarInventario() {
+        fetch('https://localhost:7137/api/productos')
+            .then(response => response.json())
+            .then(productos => {
+                const contenedor = document.getElementById('contenedor-tabla');
+
+                if (productos.length === 0) {
+                    contenedor.innerHTML = '<p style="padding: 10px; text-align: center;">No hay productos registrados.</p>';
+                    return;
+                }
+
+                let tablaHTML = `
+                    <table style="width:100%; border-collapse: collapse; margin-top:15px;">
+                        <thead>
+                            <tr style="background-color:#1e293b; color: white; text-align: left;">
+                                <th style="padding: 10px;">ID</th>
+                                <th style="padding: 10px;">Nombre</th>
+                                <th style="padding: 10px;">Precio</th>
+                                <th style="padding: 10px;">Stock</th>
+                                <th style="padding: 10px;">Categoría</th>
+                                <th style="padding: 10px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                productos.forEach(prod => {
+                    const estiloStock = prod.stock <= 10 ? 'color: red; font-weight: bold;' : '';
+                    tablaHTML += `
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 10px;">${prod.id}</td>
+                            <td style="padding: 10px;">${prod.nombre}</td>
+                            <td style="padding: 10px;">$${prod.precio}</td>
+                            <td style="padding: 10px; ${estiloStock}">${prod.stock}</td>
+                            <td style="padding: 10px;">${prod.categoria || 'General'}</td>
+                            <td style="padding: 10px; text-align: center;">
+                                <button class="btn-editar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-stock="${prod.stock}" data-categoria="${prod.categoria || ''}"  data-descripcion = "${prod.descripcion || ''}"style="padding: 5px 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tablaHTML += `</tbody></table>`;
+                contenedor.innerHTML = tablaHTML;
+
+                document.querySelectorAll('.btn-editar').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        const nombre = e.target.getAttribute('data-nombre');
+                        const precio = e.target.getAttribute('data-precio');
+                        const stockactual = e.target.getAttribute('data-stock');
+                        const categoria = e.target.getAttribute('data-categoria');
+                        const descripcion = e.target.getAttribute('data-descripcion');
+
+                        document.getElementById('card-formulario-producto').style.display = 'block';
+                        document.getElementById('edit-id').value = id;
+                        document.getElementById('edit-stock-original').value = stockactual;
+                        document.getElementById('edit-nombre').value = nombre;
+                        document.getElementById('edit-precio').value = precio;
+                        document.getElementById('edit-stock').value = '';
+                        document.getElementById('edit-categoria').value = categoria;
+                        document.getElementById('edit-descripcion').value = descripcion;
+
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar los productos:', error);
+                document.getElementById('contenedor-tabla').innerHTML = '<p style="padding: 10px; color: red; text-align: center;">Error al cargar los productos.</p>';
+            });
+    }
+
+    cargarInventario();
+
+    setTimeout(() => {
+        const formEditar = document.getElementById('form-editar-producto');
+        const btnCancelar = document.getElementById('btn-cancelar-edit');
+
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', () => {
+                document.getElementById('card-formulario-producto').style.display = 'none';
+                formEditar.reset();
+            });
+        }
+
+        if (formEditar) {
+            formEditar.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-id').value;
+                const stockOriginal = parseInt(document.getElementById('edit-stock-original').value) || 0;
+                const cantidadIngresada = parseInt(document.getElementById('edit-stock').value) || 0;
+
+                const stockFinal = stockOriginal + cantidadIngresada;
+
+                const productoActualizado = {
+                    id: parseInt(id),
+                    nombre: document.getElementById('edit-nombre').value,
+                    precio: parseFloat(document.getElementById('edit-precio').value),
+                    stock: stockFinal,
+                    categoria: document.getElementById('edit-categoria').value,
+                    descripcion: document.getElementById('edit-descripcion').value
+                };
+
+                fetch(`https://localhost:7137/api/productos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productoActualizado)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert(`Producto actualizado con éxito (Anterior: ${stockOriginal} + Agregados: ${cantidadIngresada} = Total: ${stockFinal})`);
+                        document.getElementById('card-formulario-producto').style.display = 'none';
+                        formEditar.reset();
+                        cargarInventario();
+                    } else {
+                        response.text().then(err => alert('Error al actualizar producto: ' + err));
+                    }
+                })
+                .catch(err => console.error('Error en PUT Producto:', err));
+            });
+        }
+    }, 100);
+    break;
+
+                case 'clientes':
+                    sectionTitle.textContent = 'Gestión de Clientes';
+                    contentBody.innerHTML = `
+                        <div class="card" style="margin-bottom: 20px;">
+                            <h3>Registrar nuevo Cliente</h3>
+                            <form id="form-cliente" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                                <input type="text" id="nombre-cliente" placeholder="Nombre completo" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="text" id="cedula-cliente" placeholder="Cédula" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">   
+                                <input type="text" id="telefono-cliente" placeholder="Número de teléfono" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="email" id="email-cliente" placeholder="Correo electrónico" style="padding: 8px; flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="text" id="direccion-cliente" placeholder="Dirección" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <button type="submit" style="padding: 8px 15px; background-color: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer;">Guardar cliente</button>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <h3>Listado de Clientes</h3>
+                            <div id="contenedor-tabla-clientes">
+                                <p style="padding: 10px; color: #64748b;">Cargando clientes...</p>
+                            </div>
+                        </div>
+                    `;
+
+                    function cargarClientes() {
+                        fetch('https://localhost:7137/api/clientes')
+                            .then(response => response.json())
+                            .then(clientes => {
+                                const contenedor = document.getElementById('contenedor-tabla-clientes');
+
+                                if (clientes.length === 0) {
+                                    contenedor.innerHTML = '<p style="padding: 10px; text-align: center;">No hay clientes registrados.</p>';
+                                    return;
+                                }
+
+                                let tablaHTML = `
+                                    <table style="width:100%; border-collapse: collapse; margin-top:15px;">
+                                        <thead>
+                                            <tr style="background-color:#1e293b; color: white; text-align: left;">
+                                                <th style="padding: 10px;">ID</th>
+                                                <th style="padding: 10px;">Cedula</th>
+                                                <th style="padding: 10px;">Nombre</th>
+                                                <th style="padding: 10px;">Teléfono</th>
+                                                <th style="padding: 10px;">E-mail</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                `;
+
+                                clientes.forEach(cli => {
+                                    tablaHTML += `
+                                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                                            <td style="padding: 10px;">${cli.id}</td>
+                                            <td style="padding: 10px;">${cli.cedula}</td>
+                                            <td style="padding: 10px;">${cli.nombre}</td>
+                                            <td style="padding: 10px;">${cli.telefono || 'N/A'}</td>
+                                            <td style="padding: 10px;">${cli.email || 'N/A'}</td>
+                                        </tr>
+                                    `;
+                                });
+
+                                tablaHTML += `</tbody></table>`;
+                                contenedor.innerHTML = tablaHTML;
+                            })
+                            .catch(error => {
+                                console.error('Error al cargar los clientes:', error);
+                                document.getElementById('contenedor-tabla-clientes').innerHTML = '<p style="padding: 10px; color: red; text-align: center;">Error al cargar los clientes.</p>';
+                            });
+                    }
+
+                    cargarClientes();
+
+                    setTimeout(() => {
+                        const formCliente = document.getElementById('form-cliente');
+                        if (formCliente) {
+                            formCliente.addEventListener('submit', (e) => {
+                                e.preventDefault();
+
+                                const nuevoCliente = {
+                                    nombre: document.getElementById('nombre-cliente').value,
+                                    cedula: document.getElementById('cedula-cliente').value,
+                                    telefono: document.getElementById('telefono-cliente').value,
+                                    email: document.getElementById('email-cliente').value,
+                                    direccion: document.getElementById('direccion-cliente').value
+                                };
+
+                                fetch('https://localhost:7137/api/clientes', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(nuevoCliente)
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        formCliente.reset();
+                                        cargarClientes();
+                                    } else {
+                                        alert('Error al registrar el cliente.');
+                                    }
+                                })
+                                .catch(err => console.error('Error en POST:', err));
+                            });
+                        }
+                    }, 100);
+                    break;
+
+                case 'pos':
+                    sectionTitle.textContent = 'Punto de Venta (POS)';
+                    contentBody.innerHTML = `
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                            <div class="card">
+                                <h3>Seleccionar Productos</h3>
+                                <div style="display: flex; gap: 10px; margin-top: 15px; margin-bottom: 15px;">
+                                    <select id="select-producto" style="padding: 8px; flex: 2; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                        <option value="">Seleccione un producto...</option>
+                                    </select>
+                                    <input type="number" id="cantidad-producto" value="1" min="1" style="padding: 8px; width: 80px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                    <button type="button" id="btn-agregar-carrito" style="padding: 8px 15px; background-color: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer;">Agregar</button>
+                                </div>
+                                <h4>Carrito de Compras</h4>
+                                <table style="width:100%; border-collapse: collapse; margin-top:10px;">
+                                    <thead>
+                                        <tr style="background-color:#1e293b; color: white; text-align: left;">
+                                            <th style="padding: 8px;">Producto</th>
+                                            <th style="padding: 8px;">Precio</th>
+                                            <th style="padding: 8px;">Cantidad</th>
+                                            <th style="padding: 8px;">Subtotal</th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody id="carrito-body">
+                                        <tr><td colspan="4" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card">
+                                <h3>Datos de la venta</h3>
+                                <div style="margin-top: 15px; margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Cliente:</label>
+                                    <select id="select-cliente" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                        <option value="">Seleccione un cliente...</option>
+                                    </select>
+                                </div>
+                                <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
+                                    <h4 style="margin: 0 0 10px 0;">Resumen</h4>
+                                    <p style="font-size: 1.2rem; font-weight: bold; margin: 0;">Total: $<span id="span-total">0.00</span></p>
+                                </div>
+                                <button type="button" id="btn-procesar-venta" style="width: 100%; padding: 12px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Procesar Venta</button>
+                            </div>
+                        </div>
+                    `;
+
+                    let carrito = [];
+                    let productosGlobal = [];
+                    let clientesGlobal = [];
+
+                    function cargarDatosPOS() {
+                        fetch('https://localhost:7137/api/productos')
+                            .then(res => res.json())
+                            .then(data => {
+                                productosGlobal = data;
+                                const selectProd = document.getElementById('select-producto');
+                                data.forEach(p => {
+                                    selectProd.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock}) - $${p.precio}</option>`;
+                                });
+                            });
+
+                        fetch('https://localhost:7137/api/clientes')
+                            .then(res => res.json())
+                            .then(data => {
+                                clientesGlobal = data;
+                                const selectCli = document.getElementById('select-cliente');
+                                data.forEach(c => {
+                                    selectCli.innerHTML += `<option value="${c.id}">${c.nombre} (Cédula: ${c.cedula})</option>`;
+                                });
+                            });
+                    }
+
+                    cargarDatosPOS();
+
+                    setTimeout(() => {
+                        const btnAgregar = document.getElementById('btn-agregar-carrito');
+                        const btnProcesar = document.getElementById('btn-procesar-venta');
+
+                        btnAgregar.addEventListener('click', () => {
+                            const prodId = parseInt(document.getElementById('select-producto').value);
+                            const cantidad = parseInt(document.getElementById('cantidad-producto').value);
+
+                            if (!prodId) {
+                                alert('Por favor seleccione un producto.');
+                                return;
+                            }
+                            if (cantidad <= 0) {
+                                alert('La cantidad debe ser mayor a 0.');
+                                return;
+                            }
+
+                            const productoInfo = productosGlobal.find(p => p.id === prodId);
+                            if (!productoInfo) return;
+
+                            if (productoInfo.stock < cantidad) {
+                                alert(`Stock insuficiente. Stock disponible: ${productoInfo.stock}`);
+                                return;
+                            }
+
+                            const itemExistente = carrito.find(item => item.idProducto === prodId);
+                            if (itemExistente) {
+                                if (productoInfo.stock < (itemExistente.cantidad + cantidad)) {
+                                    alert('No hay suficiente stock para agregar más unidades.');
+                                    return;
+                                }
+                                itemExistente.cantidad += cantidad;
+                            } else {
+                                carrito.push({
+                                    idProducto: prodId,
+                                    nombre: productoInfo.nombre,
+                                    precioUnitario: productoInfo.precio,
+                                    cantidad: cantidad
+                                });
+                            }
+
+                            actualizarCarritoUI();
+                        });
+
+                        function actualizarCarritoUI() {
+                            const tbody = document.getElementById('carrito-body');
+                            const spanTotal = document.getElementById('span-total');
+                            tbody.innerHTML = '';
+
+                            if (carrito.length === 0) {
+                                tbody.innerHTML = '<tr><td colspan="4" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>';
+                                spanTotal.textContent = '0.00';
+                                return;
+                            }
+
+                            let totalGeneral = 0;
+                            carrito.forEach(item => {
+                                const subtotal = item.precioUnitario * item.cantidad;
+                                totalGeneral += subtotal;
+                                tbody.innerHTML += `
+                                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 8px;">${item.nombre}</td>
+                                        <td style="padding: 8px;">$${item.precioUnitario}</td>
+                                        <td style="padding: 8px;">${item.cantidad}</td>
+                                        <td style="padding: 8px;">$${subtotal}</td>
+                                    </tr>
+                                `;
+                            });
+
+                            spanTotal.textContent = totalGeneral.toFixed(2);
+                        }
+
+                        btnProcesar.addEventListener('click', () => {
+                            const clienteId = parseInt(document.getElementById('select-cliente').value);
+
+                            if (!clienteId) {
+                                alert('Por favor seleccione un cliente para la venta.');
+                                return;
+                            }
+
+                            if (carrito.length === 0) {
+                                alert('El carrito de compras está vacío.');
+                                return;
+                            }
+
+                            const ventaData = {
+                                idCliente: clienteId,
+                                detalleVenta: carrito.map(item => ({
+                                    idProducto: item.idProducto,
+                                    cantidad: item.cantidad
+                                }))
+                            };
+
+                            fetch('https://localhost:7137/api/ventas', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(ventaData)
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('¡Venta procesada con éxito!');
+                                    carrito = [];
+                                    actualizarCarritoUI();
+                                    cargarDatosPOS();
+                                } else {
+                                    response.text().then(err => alert('Error al procesar la venta: ' + err));
+                                }
+                            })
+                            .catch(error => console.error('Error en POST Venta:', error));
+                        });
+                    }, 100);
+                    break;
+
+                default:
+                    sectionTitle.textContent = 'Dashboard';
+                    break;
+            }
+        });
+    });
+});
