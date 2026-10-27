@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso y Registro - Ferretería</title>
+    <title>Acceso - Ferretería</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,7 +36,7 @@
             color: #475569;
             font-weight: bold;
         }
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
             padding: 10px;
             border: 1px solid #cbd5e1;
@@ -57,28 +57,12 @@
         .btn-action:hover {
             background-color: #334155;
         }
-        .toggle-link {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: #475569;
-            cursor: pointer;
-        }
-        .toggle-link span {
-            color: #2563eb;
-            font-weight: bold;
-        }
-        .toggle-link span:hover {
-            text-decoration: underline;
-        }
         .msg {
             text-align: center;
             margin-top: 10px;
             font-size: 0.9rem;
         }
         #error-msg { color: #dc2626; }
-        #success-msg { color: #16a34a; }
-        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -99,65 +83,18 @@
                 <button type="submit" class="btn-action">Ingresar</button>
                 <p id="error-msg" class="msg"></p>
             </form>
-            <div class="toggle-link">
-                ¿No tienes cuenta? <span onclick="cambiarVista('registro')">Regístrate aquí</span>
-            </div>
-        </div>
-
-        <!-- FORMULARIO DE REGISTRO -->
-        <div id="seccion-registro" class="hidden">
-            <h2>Crear Nueva Cuenta</h2>
-            <form id="form-registro">
-                <div class="form-group">
-                    <label for="reg-nombre">Nombre Completo</label>
-                    <input type="text" id="reg-nombre" required placeholder="Juan Pérez">
-                </div>
-                <div class="form-group">
-                    <label for="reg-email">Correo Electrónico</label>
-                    <input type="email" id="reg-email" required placeholder="usuario@ferreteria.com">
-                </div>
-                <div class="form-group">
-                    <label for="reg-contrasena">Contraseña</label>
-                    <input type="password" id="reg-contrasena" required placeholder="********">
-                </div>
-                <div class="form-group">
-                    <label for="reg-rol">Rol de Usuario</label>
-                    <select id="reg-rol" required>
-                        <option value="">Seleccione un rol...</option>
-                        <option value="1">Administrador / Dueño</option>
-                        <option value="2">Cajero / Empleado</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-action" style="background-color: #16a34a;">Registrarse</button>
-                <p id="success-msg" class="msg"></p>
-                <p id="error-reg-msg" class="msg" style="color: #dc2626;"></p>
-            </form>
-            <div class="toggle-link">
-                ¿Ya tienes cuenta? <span onclick="cambiarVista('login')">Inicia sesión</span>
-            </div>
         </div>
     </div>
 
     <script>
-        // Función para alternar entre pantallas de Login y Registro
-        function cambiarVista(vista) {
-            const secLogin = document.getElementById('seccion-login');
-            const secRegistro = document.getElementById('seccion-registro');
-            if (vista === 'registro') {
-                secLogin.classList.add('hidden');
-                secRegistro.classList.remove('hidden');
-            } else {
-                secRegistro.classList.add('hidden');
-                secLogin.classList.remove('hidden');
-            }
-        }
-
         // Lógica de Inicio de Sesión
         const formLogin = document.getElementById('form-login');
         const errorMsg = document.getElementById('error-msg');
 
         formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
+            errorMsg.textContent = '';
+            
             const credentials = {
                 email: document.getElementById('login-email').value,
                 contrasena: document.getElementById('login-contrasena').value
@@ -182,47 +119,6 @@
             .catch(err => {
                 console.error('Error:', err);
                 errorMsg.textContent = 'Error de conexión con el servidor.';
-            });
-        });
-
-        // Lógica de Registro de Nuevo Usuario
-        const formRegistro = document.getElementById('form-registro');
-        const successMsg = document.getElementById('success-msg');
-        const errorRegMsg = document.getElementById('error-reg-msg');
-
-        formRegistro.addEventListener('submit', (e) => {
-            e.preventDefault();
-            successMsg.textContent = '';
-            errorRegMsg.textContent = '';
-
-            const nuevoUsuario = {
-                nombreCompleto: document.getElementById('reg-nombre').value,
-                email: document.getElementById('reg-email').value,
-                contrasena: document.getElementById('reg-contrasena').value,
-                idRol: parseInt(document.getElementById('reg-rol').value)
-            };
-
-            fetch('https://localhost:7137/api/Usuarios/Registro', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nuevoUsuario)
-            })
-            .then(async response => {
-                if (response.ok) {
-                    successMsg.textContent = '¡Registro exitoso! Redirigiendo al login...';
-                    formRegistro.reset();
-                    setTimeout(() => {
-                        cambiarVista('login');
-                        successMsg.textContent = '';
-                    }, 2000);
-                } else {
-                    const errorText = await response.text();
-                    errorRegMsg.textContent = errorText || 'Error al registrar el usuario.';
-                }
-            })
-            .catch(err => {
-                console.error('Error:', err);
-                errorRegMsg.textContent = 'Error de conexión con el servidor.';
             });
         });
     </script>

@@ -308,16 +308,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 100);
                     break;
 
-                case 'pos':
+        case 'pos':
                     sectionTitle.textContent = 'Punto de Venta (POS)';
                     contentBody.innerHTML = `
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
                             <div class="card">
                                 <h3>Seleccionar Productos</h3>
                                 <div style="display: flex; gap: 10px; margin-top: 15px; margin-bottom: 15px;">
-                                    <select id="select-producto" style="padding: 8px; flex: 2; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                        <option value="">Seleccione un producto...</option>
-                                    </select>
+                                    <div style="flex: 2; position: relative;">
+                                        <input type="text" id="input-buscar-producto" placeholder="Escribe para buscar por iniciales o nombre..." list="lista-sugerencias-productos" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                                        <datalist id="lista-sugerencias-productos">
+                                            <!-- Las recomendaciones se cargan dinámicamente aquí -->
+                                        </datalist>
+                                        <input type="hidden" id="producto-seleccionado-id" value="">
+                                    </div>
                                     <input type="number" id="cantidad-producto" value="1" min="1" style="padding: 8px; width: 80px; border: 1px solid #cbd5e1; border-radius: 4px;">
                                     <button type="button" id="btn-agregar-carrito" style="padding: 8px 15px; background-color: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer;">Agregar</button>
                                 </div>
@@ -366,7 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4 style="margin: 0 0 10px 0;">Resumen</h4>
                                     <p style="font-size: 1.2rem; font-weight: bold; margin: 0;">Total: $<span id="span-total">0.00</span></p>
                                 </div>
-                                <button type="button" id="btn-procesar-venta" style="width: 100%; padding: 12px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Procesar Venta</button>
+                                <button type="button" id="btn-procesar-venta" style="width: 100%; padding: 12px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-bottom: 8px;">Procesar Venta</button>
+                                <button type="button" id="btn-cancelar-venta" style="width: 100%; padding: 10px; background-color: #64748b; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Cancelar Venta</button>
                             </div>
                         </div>
                     `;
@@ -375,16 +380,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     let productosGlobal = [];
                     let clientesGlobal = [];
 
+                    function renderizarDatalistProductos(listaProductos) {
+                        const datalist = document.getElementById('lista-sugerencias-productos');
+                        datalist.innerHTML = '';
+                        listaProductos.forEach(p => {
+                            datalist.innerHTML += `<option value="${p.nombre} - $${p.precio} (Stock: ${p.stock})">`;
+                        });
+                    }
+
                     function cargarDatosPOS() {
                         fetch('https://localhost:7137/api/productos')
                             .then(res => res.json())
                             .then(data => {
                                 productosGlobal = data;
-                                const selectProd = document.getElementById('select-producto');
-                                selectProd.innerHTML = '<option value="">Seleccione un producto...</option>';
-                                data.forEach(p => {
-                                    selectProd.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock}) - $${p.precio}</option>`;
-                                });
+                                renderizarDatalistProductos(productosGlobal);
                             });
 
                         fetch('https://localhost:7137/api/clientes')
@@ -399,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         const btnAgregar = document.getElementById('btn-agregar-carrito');
                         const btnProcesar = document.getElementById('btn-procesar-venta');
+                        const btnCancelarVenta = document.getElementById('btn-cancelar-venta');
                         const btnBuscarCliente = document.getElementById('btn-buscar-cliente');
                         const inputBusquedaCedula = document.getElementById('busqueda-cedula');
                         const infoClienteContainer = document.getElementById('info-cliente-container');
@@ -407,6 +417,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         const clienteSeleccionadoIdInput = document.getElementById('cliente-seleccionado-id');
                         const btnRegistrarRapido = document.getElementById('btn-registrar-rapido');
                         const btnCambiarCliente = document.getElementById('btn-cambiar-cliente');
+                        
+                        const inputBuscarProducto = document.getElementById('input-buscar-producto');
+                        const productoSeleccionadoIdInput = document.getElementById('producto-seleccionado-id');
+
+                        inputBuscarProducto.addEventListener('input', () => {
+                            const valorEscrito = inputBuscarProducto.value.trim();
+                            const productoEncontrado = productosGlobal.find(p => 
+                                valorEscrito.includes(p.nombre) || p.nombre.toLowerCase() === valorEscrito.toLowerCase()
+                            );
+
+                            if (productoEncontrado) {
+                                productoSeleccionadoIdInput.value = productoEncontrado.id;
+                            } else {
+                                productoSeleccionadoIdInput.value = '';
+                            }
+                        });
 
                         btnBuscarCliente.addEventListener('click', () => {
                             const cedulaBuscada = inputBusquedaCedula.value.trim();
@@ -490,11 +516,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
 
                         btnAgregar.addEventListener('click', () => {
-                            const prodId = parseInt(document.getElementById('select-producto').value);
+                            const prodId = parseInt(productoSeleccionadoIdInput.value);
                             const cantidad = parseInt(document.getElementById('cantidad-producto').value);
 
                             if (!prodId) {
-                                alert('Por favor seleccione un producto.');
+                                alert('Por favor seleccione o escriba un producto válido de la lista.');
                                 return;
                             }
                             if (cantidad <= 0) {
@@ -527,6 +553,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             actualizarCarritoUI();
+
+                            // Reiniciar casilla de cantidad y limpiar buscador
+                            document.getElementById('cantidad-producto').value = '1';
+                            inputBuscarProducto.value = '';
+                            productoSeleccionadoIdInput.value = '';
                         });
 
                         function actualizarCarritoUI() {
@@ -556,6 +587,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             spanTotal.textContent = totalGeneral.toFixed(2);
                         }
+
+                        // Evento para cancelar la venta actual
+                        btnCancelarVenta.addEventListener('click', () => {
+                            if (carrito.length === 0 && !clienteSeleccionadoIdInput.value) {
+                                alert('No hay una venta en proceso para cancelar.');
+                                return;
+                            }
+
+                            if (confirm('¿Estás seguro de que deseas cancelar el proceso de venta actual? Se perderán los datos ingresados.')) {
+                                carrito = [];
+                                actualizarCarritoUI();
+                                
+                                // Restablecer cliente
+                                clienteSeleccionadoIdInput.value = '';
+                                infoClienteContainer.style.display = 'none';
+                                formNuevoClientePos.style.display = 'none';
+                                inputBusquedaCedula.value = '';
+                                inputBusquedaCedula.disabled = false;
+                                btnBuscarCliente.disabled = false;
+
+                                // Restablecer buscador de productos y cantidad
+                                inputBuscarProducto.value = '';
+                                productoSeleccionadoIdInput.value = '';
+                                document.getElementById('cantidad-producto').value = '1';
+
+                                alert('Venta cancelada con éxito.');
+                            }
+                        });
 
                         btnProcesar.addEventListener('click', () => {
                             const clienteId = parseInt(clienteSeleccionadoIdInput.value);
@@ -603,7 +662,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }, 100);
                     break;
-
                 case 'ventas-dia':
                     sectionTitle.textContent = 'Ventas del Día';
                     contentBody.innerHTML = `
