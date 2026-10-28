@@ -10,15 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionTitle = document.getElementById('section-title');
     const contentBody = document.querySelector('.content-body');
 
-    // Mensaje en consola con el rol del usuario conectado
-    console.log(`Usuario conectado con éxito: ${usuarioActual.nombreCompleto} (Rol: ${usuarioActual.idRol === 1 ? 'Administrador' : 'Cajero'})`);
+    // Identificar el rol en texto para la consola
+    const nombreRol = usuarioActual.idRol === 3 ? 'Superusuario' : (usuarioActual.idRol === 2 ? 'Cajero' : 'Administrador');
+    console.log(`Usuario conectado con éxito: ${usuarioActual.nombreCompleto} (Rol: ${nombreRol})`);
 
     // Restricciones según el rol al cargar la página (Ocultar opciones del menú lateral)
     if (usuarioActual.idRol === 2) {
         navLinks.forEach(link => {
             const seccion = link.getAttribute('data-section');
-            // Si el rol es cajero, ocultamos la opción de clientes
-            if (seccion === 'clientes') {
+            // Si el rol es cajero, ocultamos Dashboard, Clientes y Producto Más Vendido
+            if (seccion === 'dashboard' || seccion === 'clientes' || seccion === 'producto-mas-vendido') {
                 link.parentElement.style.display = 'none'; 
             }
         });
@@ -33,14 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const section = link.getAttribute('data-section');
 
             // Bloqueo de seguridad por si intentan forzar la vista por cajero
-            if (usuarioActual.idRol === 2 && section === 'clientes') {
-                alert('Acceso denegado para este rol.');
+            if (usuarioActual.idRol === 2 && (section === 'dashboard' || section === 'clientes' || section === 'producto-mas-vendido')) {
+                alert('Acceso denegado. Este módulo está restringido para tu rol.');
                 return;
             }
 
             // Quitar la clase 'active' de todos los enlaces y ponerla en el presionado
             navLinks.forEach(item => item.classList.remove('active'));
             link.classList.add('active');
+            
+                
 
             // Cambiar el título superior y el contenido según la opción
             switch (section) {
