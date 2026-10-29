@@ -10,9 +10,88 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionTitle = document.getElementById('section-title');
     const contentBody = document.querySelector('.content-body');
 
+    // --- CONFIGURACIÓN DEL BOTÓN DE CERRAR SESIÓN ---
+    const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
+    if (btnCerrarSesion) {
+        btnCerrarSesion.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                localStorage.removeItem('usuarioLogueado');
+                window.location.href = 'login.html';
+            }
+        });
+    }
+
     // Identificar el rol en texto para la consola
     const nombreRol = usuarioActual.idRol === 3 ? 'Superusuario' : (usuarioActual.idRol === 2 ? 'Cajero' : 'Administrador');
     console.log(`Usuario conectado con éxito: ${usuarioActual.nombreCompleto} (Rol: ${nombreRol})`);
+
+    // --- CONFIGURACIÓN DE INACTIVIDAD (5 MINUTOS) ---
+    let temporizadorInactividad;
+    const TIEMPO_INACTIVIDAD_MS = 5 * 60 * 1000; // 5 minutos
+
+    function mostrarModalBloqueo() {
+        // Evitar duplicar modales si ya está abierto
+        if (document.getElementById('modal-bloqueo-inactividad')) return;
+
+        const modalHTML = `
+            <div id="modal-bloqueo-inactividad" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); width: 100%; max-width: 400px; text-align: center;">
+                    <h3 style="color: #1e293b; margin-bottom: 10px;">Sesión Bloqueada por Inactividad</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">
+                        Han pasado 5 minutos sin actividad. Por seguridad, ingresa tu contraseña para continuar, <b>${usuarioActual.nombreCompleto}</b>.
+                    </p>
+                    <form id="form-desbloqueo" style="display: flex; flex-direction: column; gap: 12px;">
+                        <input type="password" id="input-pass-bloqueo" placeholder="Contraseña actual" required style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; width: 100%;">
+                        <button type="submit" style="padding: 10px; background-color: #1e293b; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Desbloquear</button>
+                        <button type="button" id="btn-forzar-salir" style="padding: 8px; background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.85rem;">Cerrar sesión actual</button>
+                    </form>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        document.getElementById('form-desbloqueo').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const passwordIngresada = document.getElementById('input-pass-bloqueo').value;
+
+            // Validar credenciales contra la API de login
+            fetch('https://localhost:7137/api/Usuarios/Login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: usuarioActual.email, contrasena: passwordIngresada })
+            })
+            .then(async res => {
+                if (res.ok) {
+                    // Contraseña correcta: removemos modal y reiniciamos temporizador
+                    document.getElementById('modal-bloqueo-inactividad').remove();
+                    reiniciarTemporizadorInactividad();
+                } else {
+                    alert('Contraseña incorrecta. Inténtalo de nuevo.');
+                }
+            })
+            .catch(() => {
+                alert('Error de conexión con el servidor al verificar credenciales.');
+            });
+        });
+
+        document.getElementById('btn-forzar-salir').addEventListener('click', () => {
+            localStorage.removeItem('usuarioLogueado');
+            window.location.href = 'login.html';
+        });
+    }
+
+    function reiniciarTemporizadorInactividad() {
+        clearTimeout(temporizadorInactividad);
+        temporizadorInactividad = setTimeout(mostrarModalBloqueo, TIEMPO_INACTIVIDAD_MS);
+    }
+
+    // Escuchar eventos de interacción del usuario para medir inactividad
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evento => {
+        window.addEventListener(evento, reiniciarTemporizadorInactividad, true);
+    });
+
+    // Iniciar temporizador al cargar la página
+    reiniciarTemporizadorInactividad();
 
     // Restricciones según el rol al cargar la página (Ocultar opciones del menú lateral)
     if (usuarioActual.idRol === 2) {
@@ -42,19 +121,95 @@ document.addEventListener('DOMContentLoaded', () => {
             // Quitar la clase 'active' de todos los enlaces y ponerla en el presionado
             navLinks.forEach(item => item.classList.remove('active'));
             link.classList.add('active');
-            
-                
 
             // Cambiar el título superior y el contenido según la opción
             switch (section) {
-                case 'dashboard':
-                    sectionTitle.textContent = 'Dashboard';
-                    contentBody.innerHTML = `
-                        <div class="card">
-                            <h3>Bienvenido al Sistema de Gestión, ${usuarioActual.nombreCompleto || 'Usuario'}</h3>
-                            <p>Selecciona una opción del menú lateral para administrar productos, clientes o realizar ventas.</p>
-                        </div>
-                    `;
+                case 'Inicio':
+                    sectionTitle.textContent = '/ Inicio /';
+                    let contenidoDashboard = `
+                    <div class="card" style="margin-bottom: 20px;">
+                    <h3>Bienvenido ${usuarioActual.nombreCompleto || 'Usuario'}</h3>
+                    <p>Selecciona una opcion del menu lateral para iniciar.</p>
+                </div>
+            `;
+            //Si el usuario es Superusuario (3) o Administrador (1), le mostramos el módulo para crear usuarios
+            if (usuarioActual.idRol === 3 || usuarioActual.idRol === 1){
+                const opcionesRolHTML = usuarioActual.idRol === 3
+                ? `<option value="1">Administrador / Dueño del local</option>
+                   <option value="2">Cajero</option>
+                   <option value="3">Superusuario</option>`
+                :    `<option value="2">Cajero</option>`; 
+                contenidoDashboard += `
+                <div class="card" style="max-width: 600px; margin: 0 auto;">
+                    <h3>Crear Nuevo Usuario</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">
+                        ${usuarioActual.idRol === 3 ? 'Como Superusuario, puedes registrar cuentas para administradores o cajeros.' : 'Como Administrador, puedes registrar cuentas para los cajeros.'}
+                    </p>
+                    <form id="form-crear-usuario-admin" style="display: flex; flex-direction: column; gap: 10px;">
+                        <input type="text" id="nuevo-nombre" placeholder="Nombre completo" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                        <input type="email" id="nuevo-correo" placeholder="Correo electrónico" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                        <input type="password" id="nuevo-contrasena" placeholder="Contraseña (Mín. 8 caracteres, 1 may., 1 núm., 1 especial)" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                        <label for="nuevo-rol" style="font-weight: bold; color: #475569; font-size: 0.9rem;">Asignar Rol:</label>
+                        <select id="nuevo-rol" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                            <option value="">Seleccione un rol...</option>
+                            ${opcionesRolHTML}
+                        </select>
+                        <button type="submit" style="padding: 10px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px;">Crear Usuario</button>
+                    </form>
+                </div>
+                `;
+            }
+            contentBody.innerHTML = contenidoDashboard;
+
+                    setTimeout(() => {
+                        const formCrearUsuario = document.getElementById('form-crear-usuario-admin');
+                        if (formCrearUsuario) {
+                            formCrearUsuario.addEventListener('submit', (e) => {
+                                e.preventDefault();
+
+                                const nombre = document.getElementById('nuevo-nombre').value.trim();
+                                const email = document.getElementById('nuevo-correo').value.trim();
+                                const contrasena = document.getElementById('nuevo-contrasena').value;
+                                const idRol = parseInt(document.getElementById('nuevo-rol').value);
+
+                                const validarPatronContrasena = (pass) => {
+                                    const minLength = pass.length >= 8;
+                                    const hasUpperCase = /[A-Z]/.test(pass);
+                                    const hasNumber = /[0-9]/.test(pass);
+                                    const hasSpecialChar = /[^a-zA-Z0-9]/.test(pass);
+                                    return minLength && hasUpperCase && hasNumber && hasSpecialChar;
+                                };
+
+                                if (!validarPatronContrasena(contrasena)) {
+                                    alert('La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, un número y un carácter especial.');
+                                    return;
+                                }
+
+                                const nuevoUsuarioData = {
+                                    nombreCompleto: nombre,
+                                    email: email,
+                                    contrasena: contrasena,
+                                    idRol: idRol
+                                };
+
+                                fetch('https://localhost:7137/api/Usuarios/Registro', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(nuevoUsuarioData)
+                                })
+                                .then(async res => {
+                                    if (res.ok) {
+                                        alert('¡Usuario creado con éxito!');
+                                        formCrearUsuario.reset();
+                                    } else {
+                                        const errorText = await res.text();
+                                        alert('Error al crear usuario: ' + errorText);
+                                    }
+                                })
+                                .catch(err => console.error('Error de red:', err));
+                            });
+                        }
+                    }, 100);
                     break;
 
                 case 'inventario':
@@ -311,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 100);
                     break;
 
-        case 'pos':
+                case 'pos':
                     sectionTitle.textContent = 'Punto de Venta (POS)';
                     contentBody.innerHTML = `
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
@@ -557,7 +712,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             actualizarCarritoUI();
 
-                            // Reiniciar casilla de cantidad y limpiar buscador
                             document.getElementById('cantidad-producto').value = '1';
                             inputBuscarProducto.value = '';
                             productoSeleccionadoIdInput.value = '';
@@ -591,7 +745,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             spanTotal.textContent = totalGeneral.toFixed(2);
                         }
 
-                        // Evento para cancelar la venta actual
                         btnCancelarVenta.addEventListener('click', () => {
                             if (carrito.length === 0 && !clienteSeleccionadoIdInput.value) {
                                 alert('No hay una venta en proceso para cancelar.');
@@ -602,7 +755,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 carrito = [];
                                 actualizarCarritoUI();
                                 
-                                // Restablecer cliente
                                 clienteSeleccionadoIdInput.value = '';
                                 infoClienteContainer.style.display = 'none';
                                 formNuevoClientePos.style.display = 'none';
@@ -610,7 +762,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 inputBusquedaCedula.disabled = false;
                                 btnBuscarCliente.disabled = false;
 
-                                // Restablecer buscador de productos y cantidad
                                 inputBuscarProducto.value = '';
                                 productoSeleccionadoIdInput.value = '';
                                 document.getElementById('cantidad-producto').value = '1';
@@ -665,6 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }, 100);
                     break;
+
                 case 'ventas-dia':
                     sectionTitle.textContent = 'Ventas del Día';
                     contentBody.innerHTML = `
@@ -806,7 +958,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
 
-                    // 1. Cargar el producto más vendido a nivel GENERAL
                     fetch('https://localhost:7137/api/Ventas/ProductoMasVendido')
                         .then(res => res.json())
                         .then(data => {
@@ -828,7 +979,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('contenedor-producto-general').innerHTML = '<p style="color: red;">Sin datos suficientes.</p>';
                         });
 
-                    // 2. Función para cargar el producto más vendido del DÍA
                     function cargarEstrellaDiario(fechaStr = '') {
                         let url = 'https://localhost:7137/api/Ventas/ProductoMasVendidoDiario';
                         if (fechaStr) {
@@ -856,7 +1006,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                     }
 
-                    // Inicializar el input de fecha con el día actual por defecto
                     setTimeout(() => {
                         const inputFecha = document.getElementById('filtro-fecha-estrella');
                         const fechaLocal = new Date().toLocaleDateString('en-CA');
@@ -875,5 +1024,5 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
             }
         });
-    });
+    }); 
 });
