@@ -212,9 +212,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 100);
                     break;
 
-                case 'inventario':
+              case 'inventario':
                     sectionTitle.textContent = 'Inventario de productos';
                     contentBody.innerHTML = `
+                        <!-- FORMULARIO PARA AGREGAR NUEVO PRODUCTO -->
+                        <div class="card" style="margin-bottom: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                            <h3>Registrar Nuevo Producto</h3>
+                            <form id="form-crear-producto-inventario" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                                <input type="text" id="nuevo-prod-nombre" placeholder="Nombre del producto" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" id="nuevo-prod-precio" placeholder="Precio" step="0.01" required style="padding: 8px; flex: 1; min-width: 120px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" id="nuevo-prod-stock" placeholder="Stock / Cantidad inicial" min="0" required style="padding: 8px; flex: 1; min-width: 120px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="text" id="nuevo-prod-categoria" placeholder="Categoría" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="text" id="nuevo-prod-descripcion" placeholder="Descripción (Opcional)" style="padding: 8px; flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <button type="submit" style="padding: 8px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Guardar Producto</button>
+                            </form>
+                        </div>
+
                         <div class="card" id="card-formulario-producto" style="margin-bottom: 20px; display: none;">
                             <h3 id="titulo-form-productos">Editar Producto</h3>
                             <form id="form-editar-producto" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
@@ -313,6 +326,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     cargarInventario();
 
                     setTimeout(() => {
+                        // --- LÓGICA PARA CREAR NUEVO PRODUCTO ---
+                        const formCrearProd = document.getElementById('form-crear-producto-inventario');
+                        if (formCrearProd) {
+                            formCrearProd.addEventListener('submit', (e) => {
+                                e.preventDefault();
+                                const nuevoProductoData = {
+                                    nombre: document.getElementById('nuevo-prod-nombre').value.trim(),
+                                    precio: parseFloat(document.getElementById('nuevo-prod-precio').value),
+                                    stock: parseInt(document.getElementById('nuevo-prod-stock').value),
+                                    categoria: document.getElementById('nuevo-prod-categoria').value.trim(),
+                                    descripcion: document.getElementById('nuevo-prod-descripcion').value.trim()
+                                };
+
+                                fetch('https://localhost:7137/api/productos', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(nuevoProductoData)
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        alert('¡Producto creado y registrado con éxito en el inventario!');
+                                        formCrearProd.reset();
+                                        cargarInventario();
+                                    } else {
+                                        response.text().then(err => alert('Error al crear el producto: ' + err));
+                                    }
+                                })
+                                .catch(err => console.error('Error en POST Producto:', err));
+                            });
+                        }
+
                         const formEditar = document.getElementById('form-editar-producto');
                         const btnCancelar = document.getElementById('btn-cancelar-edit');
 
@@ -344,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 fetch(`https://localhost:7137/api/productos/${id}`, {
                                     method: 'PUT',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(productoActualizado)
+                                    body: JSON.JSON.stringify ? JSON.stringify(productoActualizado) : JSON.stringify(productoActualizado)
                                 })
                                 .then(response => {
                                     if (response.ok) {
