@@ -1185,11 +1185,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
 
                 case 'producto-mas-vendido':
-                    sectionTitle.textContent = 'Producto Más ';
+                    sectionTitle.textContent = 'Producto Más Vendido';
                     contentBody.innerHTML = `
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div class="card">
-                                <h3>🏆 Producto con mayor demanda </h3>
+                                <h3>🏆 Producto con mayor demanda</h3>
                                 <div id="contenedor-producto-general" style="margin-top: 15px;">
                                     <p style="color: #64748b;">Cargando general...</p>
                                 </div>
