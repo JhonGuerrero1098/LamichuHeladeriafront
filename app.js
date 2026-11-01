@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Cambiar el título superior y el contenido según la opción
             switch (section) {
-                case 'Inicio':
+               case 'Inicio':
                     sectionTitle.textContent = '/ Inicio /';
                     let contenidoDashboard = `
                     <div class="card" style="margin-bottom: 20px;">
@@ -132,13 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>Selecciona una opcion del menu lateral para iniciar.</p>
                 </div>
             `;
-            //Si el usuario es Superusuario (3) o Administrador (1), le mostramos el módulo para crear usuarios
+            // Si el usuario es Superusuario (3) o Administrador (1), le mostramos el módulo para crear usuarios
             if (usuarioActual.idRol === 3 || usuarioActual.idRol === 1){
                 const opcionesRolHTML = usuarioActual.idRol === 3
                 ? `<option value="1">Administrador / Dueño del local</option>
-                   <option value="2">Cajero</option>
-                   <option value="3">Superusuario</option>`
+                   <option value="2">Cajero</option>`
                 :    `<option value="2">Cajero</option>`; 
+                
                 contenidoDashboard += `
                 <div class="card" style="max-width: 600px; margin: 0 auto;">
                     <h3>Crear Nuevo Usuario</h3>
@@ -228,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </form>
                         </div>
 
+                        <!-- FORMULARIO DESPLEGABLE PARA EDITAR PRODUCTO -->
                         <div class="card" id="card-formulario-producto" style="margin-bottom: 20px; display: none;">
                             <h3 id="titulo-form-productos">Editar Producto</h3>
                             <form id="form-editar-producto" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
@@ -242,6 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <button type="button" id="btn-cancelar-edit" style="padding: 8px 15px; background-color: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
                             </form>
                         </div>
+
+                        <!-- TABLA DE PRODUCTOS EN STOCK -->
                         <div class="card">
                             <h3>Productos en stock</h3>
                             <div id="contenedor-tabla">
@@ -285,8 +288,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                             <td style="padding: 10px;">$${prod.precio}</td>
                                             <td style="padding: 10px; ${estiloStock}">${prod.stock}</td>
                                             <td style="padding: 10px;">${prod.categoria || 'General'}</td>
-                                            <td style="padding: 10px; text-align: center;">
+                                            <td style="padding: 10px; text-align: center; display: flex; gap: 5px; justify-content: center;">
                                                 <button class="btn-editar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-stock="${prod.stock}" data-categoria="${prod.categoria || ''}" data-descripcion="${prod.descripcion || ''}" style="padding: 5px 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
+                                                <button class="btn-eliminar-producto" data-id="${prod.id}" style="padding: 5px 10px; background-color: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Eliminar</button>
                                             </td>
                                         </tr>
                                     `;
@@ -295,6 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 tablaHTML += `</tbody></table>`;
                                 contenedor.innerHTML = tablaHTML;
 
+                                // Evento para abrir el formulario de edición
                                 document.querySelectorAll('.btn-editar').forEach(btn => {
                                     btn.addEventListener('click', (e) => {
                                         const id = e.target.getAttribute('data-id');
@@ -316,6 +321,28 @@ document.addEventListener('DOMContentLoaded', () => {
                                         window.scrollTo({ top: 0, behavior: 'smooth' });
                                     });
                                 });
+
+                                // Evento para Eliminar producto de la base de datos
+                                document.querySelectorAll('.btn-eliminar-producto').forEach(btn => {
+                                    btn.addEventListener('click', (e) => {
+                                        const idProducto = e.target.getAttribute('data-id');
+
+                                        if (confirm('¿Estás seguro de que deseas eliminar este producto del inventario?')) {
+                                            fetch(`https://localhost:7137/api/productos/${idProducto}`, {
+                                                method: 'DELETE'
+                                            })
+                                            .then(response => {
+                                                if (response.ok) {
+                                                    alert('¡Producto eliminado con éxito!');
+                                                    cargarInventario(); // Refrescar la tabla
+                                                } else {
+                                                    alert('No se pudo eliminar el producto (puede estar asociado a ventas registradas).');
+                                                }
+                                            })
+                                            .catch(err => console.error('Error en DELETE Producto:', err));
+                                        }
+                                    });
+                                });
                             })
                             .catch(error => {
                                 console.error('Error al cargar los productos:', error);
@@ -326,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cargarInventario();
 
                     setTimeout(() => {
-                        // --- LÓGICA PARA CREAR NUEVO PRODUCTO ---
+                        // Lógica para Crear Nuevo Producto
                         const formCrearProd = document.getElementById('form-crear-producto-inventario');
                         if (formCrearProd) {
                             formCrearProd.addEventListener('submit', (e) => {
@@ -357,6 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         }
 
+                        // Lógica para Editar / Actualizar Producto
                         const formEditar = document.getElementById('form-editar-producto');
                         const btnCancelar = document.getElementById('btn-cancelar-edit');
 
@@ -388,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 fetch(`https://localhost:7137/api/productos/${id}`, {
                                     method: 'PUT',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.JSON.stringify ? JSON.stringify(productoActualizado) : JSON.stringify(productoActualizado)
+                                    body: JSON.stringify(productoActualizado)
                                 })
                                 .then(response => {
                                     if (response.ok) {
@@ -406,9 +434,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 100);
                     break;
 
-                case 'clientes':
+              case 'clientes':
                     sectionTitle.textContent = 'Gestión de Clientes';
                     contentBody.innerHTML = `
+                        <!-- FORMULARIO DESPLEGABLE (ACORDEÓN) PARA EDITAR CLIENTE -->
+                        <div class="card" id="card-formulario-cliente" style="margin-bottom: 20px; display: none; background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                            <h3 id="titulo-form-clientes">Editar Cliente</h3>
+                            <form id="form-editar-cliente" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
+                                <input type="hidden" id="edit-cliente-id">
+                                <input type="text" id="edit-cliente-nombre" placeholder="Nombre completo" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="text" id="edit-cliente-cedula" placeholder="Cédula" required style="padding: 8px; flex: 1; min-width: 130px; border: 1px solid #cbd5e1; border-radius: 4px;">   
+                                <input type="text" id="edit-cliente-telefono" placeholder="Número de teléfono" required style="padding: 8px; flex: 1; min-width: 130px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="email" id="edit-cliente-email" placeholder="Correo electrónico" style="padding: 8px; flex: 1; min-width: 180px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="text" id="edit-cliente-direccion" placeholder="Dirección" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <button type="submit" style="padding: 8px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Actualizar</button>
+                                <button type="button" id="btn-cancelar-edit-cliente" style="padding: 8px 15px; background-color: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                            </form>
+                        </div>
+
+                        <!-- FORMULARIO PARA REGISTRAR NUEVO CLIENTE -->
                         <div class="card" style="margin-bottom: 20px;">
                             <h3>Registrar nuevo Cliente</h3>
                             <form id="form-cliente" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
@@ -421,6 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </form>
                         </div>
 
+                        <!-- TABLA DE CLIENTES -->
                         <div class="card">
                             <h3>Listado de Clientes</h3>
                             <div id="contenedor-tabla-clientes">
@@ -449,6 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 <th style="padding: 10px;">Nombre</th>
                                                 <th style="padding: 10px;">Teléfono</th>
                                                 <th style="padding: 10px;">E-mail</th>
+                                                <th style="padding: 10px; text-align: center;">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -462,12 +508,60 @@ document.addEventListener('DOMContentLoaded', () => {
                                             <td style="padding: 10px;">${cli.nombre}</td>
                                             <td style="padding: 10px;">${cli.telefono || 'N/A'}</td>
                                             <td style="padding: 10px;">${cli.email || 'N/A'}</td>
+                                            <td style="padding: 10px; text-align: center; display: flex; gap: 5px; justify-content: center;">
+                                                <button class="btn-editar-cliente" data-id="${cli.id}" data-cedula="${cli.cedula}" data-nombre="${cli.nombre}" data-telefono="${cli.telefono || ''}" data-email="${cli.email || ''}" data-direccion="${cli.direccion || ''}" style="padding: 5px 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
+                                                
+                                            </td>
                                         </tr>
                                     `;
                                 });
 
                                 tablaHTML += `</tbody></table>`;
                                 contenedor.innerHTML = tablaHTML;
+
+                                // Evento para Editar (Desplegar acordeón)
+                                document.querySelectorAll('.btn-editar-cliente').forEach(btn => {
+                                    btn.addEventListener('click', (e) => {
+                                        const id = e.target.getAttribute('data-id');
+                                        const cedula = e.target.getAttribute('data-cedula');
+                                        const nombre = e.target.getAttribute('data-nombre');
+                                        const telefono = e.target.getAttribute('data-telefono');
+                                        const email = e.target.getAttribute('data-email');
+                                        const direccion = e.target.getAttribute('data-direccion');
+
+                                        document.getElementById('card-formulario-cliente').style.display = 'block';
+                                        document.getElementById('edit-cliente-id').value = id;
+                                        document.getElementById('edit-cliente-cedula').value = cedula;
+                                        document.getElementById('edit-cliente-nombre').value = nombre;
+                                        document.getElementById('edit-cliente-telefono').value = telefono;
+                                        document.getElementById('edit-cliente-email').value = email;
+                                        document.getElementById('edit-cliente-direccion').value = direccion;
+
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    });
+                                });
+
+                                /* Evento para Eliminar cliente
+                                document.querySelectorAll('.btn-eliminar-cliente').forEach(btn => {
+                                    btn.addEventListener('click', (e) => {
+                                        const idCliente = e.target.getAttribute('data-id');
+                                        
+                                        if (confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
+                                            fetch(`https://localhost:7137/api/clientes/${idCliente}`, {
+                                                method: 'DELETE'
+                                            })
+                                            .then(response => {
+                                                if (response.ok) {
+                                                    alert('Cliente eliminado con éxito.');
+                                                    cargarClientes(); // Refrescar la tabla
+                                                } else {
+                                                    alert('No se pudo eliminar el cliente (puede tener ventas asociadas).');
+                                                }
+                                            })
+                                            .catch(err => console.error('Error en DELETE:', err));
+                                        }
+                                    });
+                                });*/
                             })
                             .catch(error => {
                                 console.error('Error al cargar los clientes:', error);
@@ -478,6 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cargarClientes();
 
                     setTimeout(() => {
+                        // 1. Registrar Nuevo Cliente con validación de error (Cédula duplicada)
                         const formCliente = document.getElementById('form-cliente');
                         if (formCliente) {
                             formCliente.addEventListener('submit', (e) => {
@@ -496,21 +591,68 @@ document.addEventListener('DOMContentLoaded', () => {
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(nuevoCliente)
                                 })
-                                .then(response => {
+                                .then(async response => {
                                     if (response.ok) {
                                         formCliente.reset();
                                         cargarClientes();
+                                        alert('¡Cliente registrado con éxito!');
                                     } else {
-                                        alert('Error al registrar el cliente.');
+                                        const mensajeError = await response.text();
+                                        alert('Error: ' + mensajeError);
                                     }
                                 })
                                 .catch(err => console.error('Error en POST:', err));
                             });
                         }
+
+                        // 2. Editar / Actualizar Cliente Existente
+                        const formEditarCliente = document.getElementById('form-editar-cliente');
+                        const btnCancelarEditCliente = document.getElementById('btn-cancelar-edit-cliente');
+
+                        if (btnCancelarEditCliente) {
+                            btnCancelarEditCliente.addEventListener('click', () => {
+                                document.getElementById('card-formulario-cliente').style.display = 'none';
+                                formEditarCliente.reset();
+                            });
+                        }
+
+                        if (formEditarCliente) {
+                            formEditarCliente.addEventListener('submit', (e) => {
+                                e.preventDefault();
+                                const id = document.getElementById('edit-cliente-id').value;
+
+                                const clienteActualizado = {
+                                    id: parseInt(id),
+                                    nombre: document.getElementById('edit-cliente-nombre').value,
+                                    cedula: document.getElementById('edit-cliente-cedula').value,
+                                    telefono: document.getElementById('edit-cliente-telefono').value,
+                                    email: document.getElementById('edit-cliente-email').value,
+                                    direccion: document.getElementById('edit-cliente-direccion').value
+                                };
+
+                                fetch(`https://localhost:7137/api/clientes/${id}`, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(clienteActualizado)
+                                })
+                                .then(async response => {
+                                    if (response.ok) {
+                                        alert('¡Cliente actualizado con éxito!');
+                                        document.getElementById('card-formulario-cliente').style.display = 'none';
+                                        formEditarCliente.reset();
+                                        cargarClientes();
+                                    } else {
+                                        const mensajeError = await response.text();
+                                        alert('Error al actualizar: ' + mensajeError);
+                                    }
+                                })
+                                .catch(err => console.error('Error en PUT Cliente:', err));
+                            });
+                        }
                     }, 100);
                     break;
 
-                case 'pos':
+     case 'pos':
                     sectionTitle.textContent = 'Punto de Venta (POS)';
                     contentBody.innerHTML = `
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
@@ -533,19 +675,20 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <tr style="background-color:#1e293b; color: white; text-align: left;">
                                             <th style="padding: 8px;">Producto</th>
                                             <th style="padding: 8px;">Precio</th>
-                                            <th style="padding: 8px;">Cantidad</th>
+                                            <th style="padding: 8px; text-align: center;">Cantidad</th>
                                             <th style="padding: 8px;">Subtotal</th> 
+                                            <th style="padding: 8px; text-align: center;">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="carrito-body">
-                                        <tr><td colspan="4" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>
+                                        <tr><td colspan="5" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="card">
                                 <h3>Datos de la venta</h3>
                                 <div style="margin-top: 15px; margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Buscar Cliente por Cédula:</label>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Buscar Cliente (Opcional):</label>
                                     <div style="display: flex; gap: 8px;">
                                         <input type="text" id="busqueda-cedula" placeholder="Digite la cédula..." style="padding: 8px; flex: 1; border: 1px solid #cbd5e1; border-radius: 4px;">
                                         <button type="button" id="btn-buscar-cliente" style="padding: 8px 12px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Buscar</button>
@@ -570,7 +713,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
                                     <h4 style="margin: 0 0 10px 0;">Resumen</h4>
-                                    <p style="font-size: 1.2rem; font-weight: bold; margin: 0;">Total: $<span id="span-total">0.00</span></p>
+                                    <p style="font-size: 1.2rem; font-weight: bold; margin: 0 0 8px 0;">Total: $<span id="span-total">0.00</span></p>
+                                    
+                                    <div style="margin-top: 10px;">
+                                        <label style="display: block; font-size: 0.9rem; margin-bottom: 4px; font-weight: bold;">Efectivo Recibido:</label>
+                                        <input type="number" id="input-efectivo-recibido" placeholder="0.00" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" min="0" step="0.01">
+                                    </div>
+                                    <p style="font-size: 1rem; font-weight: bold; margin: 8px 0 0 0; color: #16a34a;">Cambio (Vueltos): $<span id="span-cambio">0.00</span></p>
                                 </div>
                                 <button type="button" id="btn-procesar-venta" style="width: 100%; padding: 12px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-bottom: 8px;">Procesar Venta</button>
                                 <button type="button" id="btn-cancelar-venta" style="width: 100%; padding: 10px; background-color: #64748b; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Cancelar Venta</button>
@@ -622,6 +771,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         const inputBuscarProducto = document.getElementById('input-buscar-producto');
                         const productoSeleccionadoIdInput = document.getElementById('producto-seleccionado-id');
+                        const inputEfectivoRecibido = document.getElementById('input-efectivo-recibido');
+                        const spanCambio = document.getElementById('span-cambio');
 
                         inputBuscarProducto.addEventListener('input', () => {
                             const valorEscrito = inputBuscarProducto.value.trim();
@@ -635,6 +786,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 productoSeleccionadoIdInput.value = '';
                             }
                         });
+
+                        function calcularCambio() {
+                            const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
+                            const efectivo = parseFloat(inputEfectivoRecibido.value) || 0;
+                            const cambio = efectivo - totalGeneral;
+                            spanCambio.textContent = cambio >= 0 ? cambio.toFixed(2) : '0.00';
+                        }
+
+                        inputEfectivoRecibido.addEventListener('input', calcularCambio);
 
                         btnBuscarCliente.addEventListener('click', () => {
                             const cedulaBuscada = inputBusquedaCedula.value.trim();
@@ -656,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 clienteSeleccionadoIdInput.value = '';
                                 infoClienteContainer.style.display = 'none';
                                 formNuevoClientePos.style.display = 'block';
-                                alert('Cliente no encontrado. Puede registrarlo abajo de forma rápida.');
+                                alert('Cliente no encontrado. Puede registrarlo abajo de forma rápida o continuar sin cliente.');
                             }
                         });
 
@@ -694,9 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     throw new Error('Error al registrar el cliente.');
                                 }
                             })
-                            .then(() => {
-                                return fetch('https://localhost:7137/api/clientes');
-                            })
+                            .then(() => fetch('https://localhost:7137/api/clientes'))
                             .then(res => res.json())
                             .then(data => {
                                 clientesGlobal = data;
@@ -767,26 +925,64 @@ document.addEventListener('DOMContentLoaded', () => {
                             tbody.innerHTML = '';
 
                             if (carrito.length === 0) {
-                                tbody.innerHTML = '<tr><td colspan="4" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>';
+                                tbody.innerHTML = '<tr><td colspan="5" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>';
                                 spanTotal.textContent = '0.00';
+                                spanCambio.textContent = '0.00';
                                 return;
                             }
 
                             let totalGeneral = 0;
-                            carrito.forEach(item => {
+                            carrito.forEach((item, index) => {
                                 const subtotal = item.precioUnitario * item.cantidad;
                                 totalGeneral += subtotal;
                                 tbody.innerHTML += `
                                     <tr style="border-bottom: 1px solid #e2e8f0;">
                                         <td style="padding: 8px;">${item.nombre}</td>
                                         <td style="padding: 8px;">$${item.precioUnitario}</td>
-                                        <td style="padding: 8px;">${item.cantidad}</td>
-                                        <td style="padding: 8px;">$${subtotal}</td>
+                                        <td style="padding: 8px; text-align: center;">
+                                            <input type="number" class="input-cambiar-cantidad" data-index="${index}" value="${item.cantidad}" min="1" style="width: 60px; padding: 4px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                        </td>
+                                        <td style="padding: 8px;">$${subtotal.toFixed(2)}</td>
+                                        <td style="padding: 8px; text-align: center;">
+                                            <button type="button" class="btn-eliminar-item" data-index="${index}" style="padding: 4px 8px; background-color: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Quitar</button>
+                                        </td>
                                     </tr>
                                 `;
                             });
 
                             spanTotal.textContent = totalGeneral.toFixed(2);
+                            calcularCambio();
+
+                            document.querySelectorAll('.input-cambiar-cantidad').forEach(input => {
+                                input.addEventListener('change', (e) => {
+                                    const index = e.target.getAttribute('data-index');
+                                    const nuevaCantidad = parseInt(e.target.value);
+                                    const productoInfo = productosGlobal.find(p => p.id === carrito[index].idProducto);
+
+                                    if (nuevaCantidad <= 0 || isNaN(nuevaCantidad)) {
+                                        alert('La cantidad debe ser al menos 1.');
+                                        e.target.value = carrito[index].cantidad;
+                                        return;
+                                    }
+
+                                    if (productoInfo && productoInfo.stock < nuevaCantidad) {
+                                        alert(`Stock insuficiente. Stock disponible: ${productoInfo.stock}`);
+                                        e.target.value = carrito[index].cantidad;
+                                        return;
+                                    }
+
+                                    carrito[index].cantidad = nuevaCantidad;
+                                    actualizarCarritoUI();
+                                });
+                            });
+
+                            document.querySelectorAll('.btn-eliminar-item').forEach(btn => {
+                                btn.addEventListener('click', (e) => {
+                                    const index = e.target.getAttribute('data-index');
+                                    carrito.splice(index, 1);
+                                    actualizarCarritoUI();
+                                });
+                            });
                         }
 
                         btnCancelarVenta.addEventListener('click', () => {
@@ -809,23 +1005,31 @@ document.addEventListener('DOMContentLoaded', () => {
                                 inputBuscarProducto.value = '';
                                 productoSeleccionadoIdInput.value = '';
                                 document.getElementById('cantidad-producto').value = '1';
+                                inputEfectivoRecibido.value = '';
+                                spanCambio.textContent = '0.00';
 
                                 alert('Venta cancelada con éxito.');
                             }
                         });
 
                         btnProcesar.addEventListener('click', () => {
-                            const clienteId = parseInt(clienteSeleccionadoIdInput.value);
-
-                            if (!clienteId) {
-                                alert('Por favor busque o registre un cliente para la venta.');
-                                return;
-                            }
+                            const clienteIdRaw = clienteSeleccionadoIdInput.value.trim();
+                            const clienteId = clienteIdRaw ? parseInt(clienteIdRaw) : null;
 
                             if (carrito.length === 0) {
                                 alert('El carrito de compras está vacío.');
                                 return;
                             }
+
+                            const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
+                            const efectivo = parseFloat(inputEfectivoRecibido.value) || 0;
+
+                            if (efectivo < totalGeneral) {
+                                alert('El efectivo recibido es menor al total de la venta.');
+                                return;
+                            }
+
+                            const cambio = efectivo - totalGeneral;
 
                             const ventaData = {
                                 idCliente: clienteId,
@@ -842,8 +1046,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             })
                             .then(response => {
                                 if (response.ok) {
-                                    alert('¡Venta procesada con éxito!');
+                                    alert(`¡Venta procesada con éxito!\nCambio a devolver: $${cambio.toFixed(2)}`);
                                     carrito = [];
+                                    inputEfectivoRecibido.value = '';
                                     actualizarCarritoUI();
                                     cargarDatosPOS();
                                     clienteSeleccionadoIdInput.value = '';
@@ -980,11 +1185,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
 
                 case 'producto-mas-vendido':
-                    sectionTitle.textContent = 'Reporte de Productos Estrella';
+                    sectionTitle.textContent = 'Producto Más ';
                     contentBody.innerHTML = `
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div class="card">
-                                <h3>🏆 Más Vendido Histórico (General)</h3>
+                                <h3>🏆 Producto con mayor demanda </h3>
                                 <div id="contenedor-producto-general" style="margin-top: 15px;">
                                     <p style="color: #64748b;">Cargando general...</p>
                                 </div>
