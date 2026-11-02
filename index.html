@@ -18,8 +18,12 @@
                 <li><a href="#" data-section="clientes"> Clientes</a></li>
                 <li><a href="#" data-section="pos"> Punto de venta (POS)</a></li>
                 <li><a href="#" data-section="ventas-dia">Ventas del Día</a></li>
-                <li><a href="#" data-section="producto-mas-vendido">Producto Más Vendido</a></li>
+                <li><a href="#" data-section="producto-mas-vendido">Top ventas</a></li>
             </ul>
+            <!--   Botón de Cerrar Sesión -->
+               <div style="padding: 20px; margin-top: auto;">
+                <button type="button" id="btn-cerrar-sesion" style="width: 100%; padding: 10px; background-color: #534d97; color: white; border-radius: 4px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer;">Cerrar Sesión</button>
+            </div>
         </aside>
 
         <main class="main-content">
@@ -37,6 +41,23 @@
             </section>
         </main>
     </div>
+    <!-- Script de validación de sesión seguro -->
+    <script>
+        try {
+            // Verificamos directamente si existe la clave en el localStorage
+            const usuarioLogueado = localStorage.getItem('usuarioLogueado');
+            
+            if (!usuarioLogueado) {
+                // Si no hay sesión, redirigimos al login de forma limpia
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            console.error("Error al validar la sesión:", error);
+            window.location.href = './login.html';
+        }
+    </script>
+
+    <!-- Script principal de la aplicación -->
     <script src="app.js"></script>
 </body>
 </html>

@@ -465,103 +465,29 @@ document.addEventListener('DOMContentLoaded', () => {
                             </form>
                         </div>
 
-                        <!-- TABLA DE CLIENTES -->
+                        <!-- TABLA DE CLIENTES Y FILTRO -->
                         <div class="card">
-                            <h3>Listado de Clientes</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                                <h3 style="margin: 0;">Clientes Registrados</h3>
+                                <input type="text" id="input-buscar-cliente-tabla" placeholder="Buscar cliente por nombre o cédula..." style="padding: 8px; width: 280px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                            </div>
                             <div id="contenedor-tabla-clientes">
                                 <p style="padding: 10px; color: #64748b;">Cargando clientes...</p>
                             </div>
                         </div>
                     `;
 
+                    let listaClientesGlobal = [];
+                    // Conjunto para almacenar los IDs de los clientes eliminados de la vista principal en esta sesión
+                    let idsClientesEliminados = JSON.parse(localStorage.getItem('clientesEliminadosUI') || '[]');
+
                     function cargarClientes() {
                         fetch('https://localhost:7137/api/clientes')
                             .then(response => response.json())
                             .then(clientes => {
-                                const contenedor = document.getElementById('contenedor-tabla-clientes');
-
-                                if (clientes.length === 0) {
-                                    contenedor.innerHTML = '<p style="padding: 10px; text-align: center;">No hay clientes registrados.</p>';
-                                    return;
-                                }
-
-                                let tablaHTML = `
-                                    <table style="width:100%; border-collapse: collapse; margin-top:15px;">
-                                        <thead>
-                                            <tr style="background-color:#1e293b; color: white; text-align: left;">
-                                                <th style="padding: 10px;">ID</th>
-                                                <th style="padding: 10px;">Cedula</th>
-                                                <th style="padding: 10px;">Nombre</th>
-                                                <th style="padding: 10px;">Teléfono</th>
-                                                <th style="padding: 10px;">E-mail</th>
-                                                <th style="padding: 10px; text-align: center;">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                `;
-
-                                clientes.forEach(cli => {
-                                    tablaHTML += `
-                                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 10px;">${cli.id}</td>
-                                            <td style="padding: 10px;">${cli.cedula}</td>
-                                            <td style="padding: 10px;">${cli.nombre}</td>
-                                            <td style="padding: 10px;">${cli.telefono || 'N/A'}</td>
-                                            <td style="padding: 10px;">${cli.email || 'N/A'}</td>
-                                            <td style="padding: 10px; text-align: center; display: flex; gap: 5px; justify-content: center;">
-                                                <button class="btn-editar-cliente" data-id="${cli.id}" data-cedula="${cli.cedula}" data-nombre="${cli.nombre}" data-telefono="${cli.telefono || ''}" data-email="${cli.email || ''}" data-direccion="${cli.direccion || ''}" style="padding: 5px 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
-                                                
-                                            </td>
-                                        </tr>
-                                    `;
-                                });
-
-                                tablaHTML += `</tbody></table>`;
-                                contenedor.innerHTML = tablaHTML;
-
-                                // Evento para Editar (Desplegar acordeón)
-                                document.querySelectorAll('.btn-editar-cliente').forEach(btn => {
-                                    btn.addEventListener('click', (e) => {
-                                        const id = e.target.getAttribute('data-id');
-                                        const cedula = e.target.getAttribute('data-cedula');
-                                        const nombre = e.target.getAttribute('data-nombre');
-                                        const telefono = e.target.getAttribute('data-telefono');
-                                        const email = e.target.getAttribute('data-email');
-                                        const direccion = e.target.getAttribute('data-direccion');
-
-                                        document.getElementById('card-formulario-cliente').style.display = 'block';
-                                        document.getElementById('edit-cliente-id').value = id;
-                                        document.getElementById('edit-cliente-cedula').value = cedula;
-                                        document.getElementById('edit-cliente-nombre').value = nombre;
-                                        document.getElementById('edit-cliente-telefono').value = telefono;
-                                        document.getElementById('edit-cliente-email').value = email;
-                                        document.getElementById('edit-cliente-direccion').value = direccion;
-
-                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    });
-                                });
-
-                                /* Evento para Eliminar cliente
-                                document.querySelectorAll('.btn-eliminar-cliente').forEach(btn => {
-                                    btn.addEventListener('click', (e) => {
-                                        const idCliente = e.target.getAttribute('data-id');
-                                        
-                                        if (confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
-                                            fetch(`https://localhost:7137/api/clientes/${idCliente}`, {
-                                                method: 'DELETE'
-                                            })
-                                            .then(response => {
-                                                if (response.ok) {
-                                                    alert('Cliente eliminado con éxito.');
-                                                    cargarClientes(); // Refrescar la tabla
-                                                } else {
-                                                    alert('No se pudo eliminar el cliente (puede tener ventas asociadas).');
-                                                }
-                                            })
-                                            .catch(err => console.error('Error en DELETE:', err));
-                                        }
-                                    });
-                                });*/
+                                // Filtramos para excluir permanentemente de la vista aquellos cuyo ID esté en la lista de eliminados
+                                listaClientesGlobal = clientes.filter(c => !idsClientesEliminados.includes(c.id));
+                                renderizarTablaClientes(listaClientesGlobal);
                             })
                             .catch(error => {
                                 console.error('Error al cargar los clientes:', error);
@@ -569,9 +495,119 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                     }
 
+                    function renderizarTablaClientes(clientesAMostrar) {
+                        const contenedor = document.getElementById('contenedor-tabla-clientes');
+
+                        if (clientesAMostrar.length === 0) {
+                            contenedor.innerHTML = '<p style="padding: 10px; text-align: center; color: #64748b;">No hay clientes para mostrar.</p>';
+                            return;
+                        }
+
+                        let tablaHTML = `
+                            <table style="width:100%; border-collapse: collapse; margin-top:15px;">
+                                <thead>
+                                    <tr style="background-color:#1e293b; color: white; text-align: left;">
+                                        <th style="padding: 10px;">ID</th>
+                                        <th style="padding: 10px;">Cedula</th>
+                                        <th style="padding: 10px;">Nombre</th>
+                                        <th style="padding: 10px;">Teléfono</th>
+                                        <th style="padding: 10px;">E-mail</th>
+                                        <th style="padding: 10px; text-align: center;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        clientesAMostrar.forEach(cli => {
+                            tablaHTML += `
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 10px;">${cli.id}</td>
+                                    <td style="padding: 10px;">${cli.cedula}</td>
+                                    <td style="padding: 10px;">${cli.nombre}</td>
+                                    <td style="padding: 10px;">${cli.telefono || 'N/A'}</td>
+                                    <td style="padding: 10px;">${cli.email || 'N/A'}</td>
+                                    <td style="padding: 10px; text-align: center;">
+                                        <div style="display: flex; gap: 5px; justify-content: center;">
+                                            <button class="btn-editar-cliente" data-id="${cli.id}" data-cedula="${cli.cedula}" data-nombre="${cli.nombre}" data-telefono="${cli.telefono || ''}" data-email="${cli.email || ''}" data-direccion="${cli.direccion || ''}" style="padding: 5px 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
+                                            <button class="btn-eliminar-cliente" data-id="${cli.id}" style="padding: 5px 10px; background-color: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Eliminar</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+
+                        tablaHTML += `</tbody></table>`;
+                        contenedor.innerHTML = tablaHTML;
+
+                        // Evento para Editar (Desplegar acordeón)
+                        document.querySelectorAll('.btn-editar-cliente').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const id = e.target.getAttribute('data-id');
+                                const cedula = e.target.getAttribute('data-cedula');
+                                const nombre = e.target.getAttribute('data-nombre');
+                                const telefono = e.target.getAttribute('data-telefono');
+                                const email = e.target.getAttribute('data-email');
+                                const direccion = e.target.getAttribute('data-direccion');
+
+                                document.getElementById('card-formulario-cliente').style.display = 'block';
+                                document.getElementById('edit-cliente-id').value = id;
+                                document.getElementById('edit-cliente-cedula').value = cedula;
+                                document.getElementById('edit-cliente-nombre').value = nombre;
+                                document.getElementById('edit-cliente-telefono').value = telefono;
+                                document.getElementById('edit-cliente-email').value = email;
+                                document.getElementById('edit-cliente-direccion').value = direccion;
+
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            });
+                        });
+
+                        // Evento para Eliminar de la lista principal (permanente en la vista, intacto en la base de datos)
+                        document.querySelectorAll('.btn-eliminar-cliente').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const idCliente = parseInt(e.target.getAttribute('data-id'));
+                                
+                                if (confirm('¿Estás seguro de que deseas eliminar este cliente de la lista? (Permanecerá guardado en la base de datos por seguridad de las ventas).')) {
+                                    if (!idsClientesEliminados.includes(idCliente)) {
+                                        idsClientesEliminados.push(idCliente);
+                                        localStorage.setItem('clientesEliminadosUI', JSON.stringify(idsClientesEliminados));
+                                    }
+                                    
+                                    listaClientesGlobal = listaClientesGlobal.filter(c => c.id !== idCliente);
+                                    
+                                    // Validar si hay texto en el buscador para aplicar el filtro actual
+                                    const textoBusqueda = document.getElementById('input-buscar-cliente-tabla').value.toLowerCase().trim();
+                                    if (textoBusqueda) {
+                                        const filtrados = listaClientesGlobal.filter(cli => 
+                                            cli.cedula.toLowerCase().includes(textoBusqueda) || 
+                                            cli.nombre.toLowerCase().includes(textoBusqueda)
+                                        );
+                                        renderizarTablaClientes(filtrados);
+                                    } else {
+                                        renderizarTablaClientes(listaClientesGlobal);
+                                    }
+
+                                    alert('Cliente eliminado de la lista principal con éxito.');
+                                }
+                            });
+                        });
+                    }
+
                     cargarClientes();
 
                     setTimeout(() => {
+                        // Buscador en tiempo real por Cédula o Nombre
+                        const inputBusqueda = document.getElementById('input-buscar-cliente-tabla');
+                        if (inputBusqueda) {
+                            inputBusqueda.addEventListener('input', (e) => {
+                                const texto = e.target.value.toLowerCase().trim();
+                                const resultados = listaClientesGlobal.filter(cli => 
+                                    cli.cedula.toLowerCase().includes(texto) || 
+                                    cli.nombre.toLowerCase().includes(texto)
+                                );
+                                renderizarTablaClientes(resultados);
+                            });
+                        }
+
                         // 1. Registrar Nuevo Cliente con validación de error (Cédula duplicada)
                         const formCliente = document.getElementById('form-cliente');
                         if (formCliente) {
@@ -651,8 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }, 100);
                     break;
-
-     case 'pos':
+case 'pos':
                     sectionTitle.textContent = 'Punto de Venta (POS)';
                     contentBody.innerHTML = `
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
@@ -712,13 +747,21 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <input type="hidden" id="cliente-seleccionado-id" value="">
 
                                 <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
-                                    <h4 style="margin: 0 0 10px 0;">Resumen</h4>
-                                    <p style="font-size: 1.2rem; font-weight: bold; margin: 0 0 8px 0;">Total: $<span id="span-total">0.00</span></p>
+                                    <h4 style="margin: 0 0 10px 0;">Resumen y Pago</h4>
+                                    <p style="font-size: 1.2rem; font-weight: bold; margin: 0 0 10px 0;">Total: $<span id="span-total">0.00</span></p>
                                     
-                                    <div style="margin-top: 10px;">
-                                        <label style="display: block; font-size: 0.9rem; margin-bottom: 4px; font-weight: bold;">Efectivo Recibido:</label>
-                                        <input type="number" id="input-efectivo-recibido" placeholder="0.00" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" min="0" step="0.01">
+                                    <div style="margin-bottom: 10px;">
+                                        <label style="display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: bold;">Método de Pago:</label>
+                                        <select id="select-metodo-pago" style="width: 100%; padding: 6px; margin-bottom: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                                            <option value="Efectivo">Efectivo</option>
+                                            <option value="Transferencia">Transferencia</option>
+                                            <option value="Datáfono">Datáfono</option>
+                                        </select>
+
+                                        <label style="display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: bold;">Monto Recibido / Pagado:</label>
+                                        <input type="number" id="input-monto-pago" placeholder="0.00" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" min="0" step="0.01">
                                     </div>
+                                    
                                     <p style="font-size: 1rem; font-weight: bold; margin: 8px 0 0 0; color: #16a34a;">Cambio (Vueltos): $<span id="span-cambio">0.00</span></p>
                                 </div>
                                 <button type="button" id="btn-procesar-venta" style="width: 100%; padding: 12px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-bottom: 8px;">Procesar Venta</button>
@@ -771,8 +814,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         const inputBuscarProducto = document.getElementById('input-buscar-producto');
                         const productoSeleccionadoIdInput = document.getElementById('producto-seleccionado-id');
-                        const inputEfectivoRecibido = document.getElementById('input-efectivo-recibido');
+                        const inputMontoPago = document.getElementById('input-monto-pago');
+                        const selectMetodoPago = document.getElementById('select-metodo-pago');
                         const spanCambio = document.getElementById('span-cambio');
+                        const spanTotal = document.getElementById('span-total');
 
                         inputBuscarProducto.addEventListener('input', () => {
                             const valorEscrito = inputBuscarProducto.value.trim();
@@ -789,12 +834,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         function calcularCambio() {
                             const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
-                            const efectivo = parseFloat(inputEfectivoRecibido.value) || 0;
-                            const cambio = efectivo - totalGeneral;
+                            const montoPagado = parseFloat(inputMontoPago.value) || 0;
+                            const cambio = montoPagado - totalGeneral;
                             spanCambio.textContent = cambio >= 0 ? cambio.toFixed(2) : '0.00';
                         }
 
-                        inputEfectivoRecibido.addEventListener('input', calcularCambio);
+                        inputMontoPago.addEventListener('input', calcularCambio);
 
                         btnBuscarCliente.addEventListener('click', () => {
                             const cedulaBuscada = inputBusquedaCedula.value.trim();
@@ -921,7 +966,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         function actualizarCarritoUI() {
                             const tbody = document.getElementById('carrito-body');
-                            const spanTotal = document.getElementById('span-total');
                             tbody.innerHTML = '';
 
                             if (carrito.length === 0) {
@@ -1005,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 inputBuscarProducto.value = '';
                                 productoSeleccionadoIdInput.value = '';
                                 document.getElementById('cantidad-producto').value = '1';
-                                inputEfectivoRecibido.value = '';
+                                inputMontoPago.value = '';
                                 spanCambio.textContent = '0.00';
 
                                 alert('Venta cancelada con éxito.');
@@ -1022,17 +1066,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
-                            const efectivo = parseFloat(inputEfectivoRecibido.value) || 0;
+                            const montoPagado = parseFloat(inputMontoPago.value) || 0;
+                            const metodoSeleccionado = selectMetodoPago.value;
 
-                            if (efectivo < totalGeneral) {
-                                alert('El efectivo recibido es menor al total de la venta.');
+                            if (montoPagado < totalGeneral) {
+                                alert('El monto pagado es menor al total de la venta.');
                                 return;
                             }
 
-                            const cambio = efectivo - totalGeneral;
+                            const cambio = montoPagado - totalGeneral;
 
                             const ventaData = {
                                 idCliente: clienteId,
+                                metodoPago: metodoSeleccionado,
                                 detalleVenta: carrito.map(item => ({
                                     idProducto: item.idProducto,
                                     cantidad: item.cantidad
@@ -1046,9 +1092,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             })
                             .then(response => {
                                 if (response.ok) {
-                                    alert(`¡Venta procesada con éxito!\nCambio a devolver: $${cambio.toFixed(2)}`);
+                                    alert(`¡Venta procesada con éxito!\nMétodo: ${metodoSeleccionado}\nCambio a devolver: $${cambio.toFixed(2)}`);
                                     carrito = [];
-                                    inputEfectivoRecibido.value = '';
+                                    inputMontoPago.value = '';
                                     actualizarCarritoUI();
                                     cargarDatosPOS();
                                     clienteSeleccionadoIdInput.value = '';
@@ -1066,7 +1112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 100);
                     break;
 
-                case 'ventas-dia':
+             case 'ventas-dia':
                     sectionTitle.textContent = 'Ventas del Día';
                     contentBody.innerHTML = `
                         <div class="card" style="margin-bottom: 20px;">
@@ -1107,6 +1153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 <th style="padding: 10px;">ID Venta</th>
                                                 <th style="padding: 10px;">Hora</th>
                                                 <th style="padding: 10px;">Cliente</th>
+                                                <th style="padding: 10px;">Método Pago</th>
                                                 <th style="padding: 10px; text-align: right;">Total</th>
                                                 <th style="padding: 10px; text-align: center;">Acción</th>
                                             </tr>
@@ -1119,6 +1166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ventas.forEach(venta => {
                                     const hora = venta.fecha ? venta.fecha.split('T')[1].substring(0, 5) : 'N/A';
                                     const nombreCliente = venta.idClienteNavigation ? venta.idClienteNavigation.nombre : 'Cliente General';
+                                    const metodoPagoVenta = venta.metodoPago || 'Efectivo';
                                     
                                     let totalVenta = 0;
                                     let listaProductosHTML = '<ul style="margin: 0; padding-left: 20px;">';
@@ -1140,13 +1188,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                             <td style="padding: 10px;">#${venta.id}</td>
                                             <td style="padding: 10px;">${hora}</td>
                                             <td style="padding: 10px;">${nombreCliente}</td>
+                                            <td style="padding: 10px;"><span style="background: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 500;">${metodoPagoVenta}</span></td>
                                             <td style="padding: 10px; text-align: right; font-weight: bold;">$${totalVenta.toFixed(2)}</td>
                                             <td style="padding: 10px; text-align: center;">
                                                 <button class="btn-desplegar" data-id="${venta.id}" style="background-color: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Ver Detalle ▼</button>
                                             </td>
                                         </tr>
                                         <tr id="detalle-${venta.id}" style="display: none; background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-                                            <td colspan="5" style="padding: 15px 20px;">
+                                            <td colspan="6" style="padding: 15px 20px;">
                                                 <div style="font-weight: bold; margin-bottom: 6px; color: #1e293b;">Productos de la Factura #${venta.id}:</div>
                                                 ${listaProductosHTML}
                                             </td>
