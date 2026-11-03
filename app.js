@@ -139,22 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
                    <option value="2">Cajero</option>`
                 :    `<option value="2">Cajero</option>`; 
                 
-                contenidoDashboard += `
+              contenidoDashboard += `
                 <div class="card" style="max-width: 600px; margin: 0 auto;">
-                    <h3>Crear Nuevo Usuario</h3>
-                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">
+                    <h3 style="color: #f8fafc; margin-bottom: 10px;">Crear Nuevo Usuario</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.5;">
                         ${usuarioActual.idRol === 3 ? 'Como Superusuario, puedes registrar cuentas para administradores o cajeros.' : 'Como Administrador, puedes registrar cuentas para los cajeros.'}
                     </p>
-                    <form id="form-crear-usuario-admin" style="display: flex; flex-direction: column; gap: 10px;">
-                        <input type="text" id="nuevo-nombre" placeholder="Nombre completo" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                        <input type="email" id="nuevo-correo" placeholder="Correo electrónico" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                        <input type="password" id="nuevo-contrasena" placeholder="Contraseña (Mín. 8 caracteres, 1 may., 1 núm., 1 especial)" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                        <label for="nuevo-rol" style="font-weight: bold; color: #475569; font-size: 0.9rem;">Asignar Rol:</label>
-                        <select id="nuevo-rol" required style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                            <option value="">Seleccione un rol...</option>
+                    <form id="form-crear-usuario-admin" style="display: flex; flex-direction: column; gap: 12px;">
+                        <input type="text" id="nuevo-nombre" placeholder="Nombre completo" required style="padding: 10px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                        <input type="email" id="nuevo-correo" placeholder="Correo electrónico" required style="padding: 10px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                        <input type="password" id="nuevo-contrasena" placeholder="Contraseña (Mín. 8 caracteres, 1 may., 1 núm., 1 especial)" required style="padding: 10px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                        <label for="nuevo-rol" style="font-weight: 500; color: #94a3b8; font-size: 0.9rem;">Asignar Rol:</label>
+                        <select id="nuevo-rol" required style="padding: 10px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                            <option value="" style="background: #111827; color: #f3f4f6;">Seleccione un rol...</option>
                             ${opcionesRolHTML}
                         </select>
-                        <button type="submit" style="padding: 10px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px;">Crear Usuario</button>
+                        <button type="submit" style="padding: 11px 15px; background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">Crear Usuario</button>
                     </form>
                 </div>
                 `;
@@ -213,1113 +213,1120 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
 
               case 'inventario':
-                    sectionTitle.textContent = 'Inventario de productos';
-                    contentBody.innerHTML = `
-                        <!-- FORMULARIO PARA AGREGAR NUEVO PRODUCTO -->
-                        <div class="card" style="margin-bottom: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                            <h3>Registrar Nuevo Producto</h3>
-                            <form id="form-crear-producto-inventario" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                                <input type="text" id="nuevo-prod-nombre" placeholder="Nombre del producto" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="number" id="nuevo-prod-precio" placeholder="Precio" step="0.01" required style="padding: 8px; flex: 1; min-width: 120px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="number" id="nuevo-prod-stock" placeholder="Stock / Cantidad inicial" min="0" required style="padding: 8px; flex: 1; min-width: 120px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="nuevo-prod-categoria" placeholder="Categoría" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="nuevo-prod-descripcion" placeholder="Descripción (Opcional)" style="padding: 8px; flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <button type="submit" style="padding: 8px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Guardar Producto</button>
-                            </form>
-                        </div>
+    sectionTitle.textContent = 'Inventario de productos';
+    contentBody.innerHTML = `
+        <!-- FORMULARIO PARA AGREGAR NUEVO PRODUCTO -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3 style="color: #f8fafc; margin-bottom: 10px;">Registrar Nuevo Producto</h3>
+            <form id="form-crear-producto-inventario" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <input type="text" id="nuevo-prod-nombre" placeholder="Nombre del producto" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="number" id="nuevo-prod-precio" placeholder="Precio" step="0.01" required style="padding: 10px 12px; flex: 1; min-width: 120px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="number" id="nuevo-prod-stock" placeholder="Stock / Cantidad inicial" min="0" required style="padding: 10px 12px; flex: 1; min-width: 120px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="nuevo-prod-categoria" placeholder="Categoría" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="nuevo-prod-descripcion" placeholder="Descripción (Opcional)" style="padding: 10px 12px; flex: 1; min-width: 200px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <button type="submit" style="padding: 10px 18px; background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Guardar Producto</button>
+            </form>
+        </div>
 
-                        <!-- FORMULARIO DESPLEGABLE PARA EDITAR PRODUCTO -->
-                        <div class="card" id="card-formulario-producto" style="margin-bottom: 20px; display: none;">
-                            <h3 id="titulo-form-productos">Editar Producto</h3>
-                            <form id="form-editar-producto" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
-                                <input type="hidden" id="edit-id">
-                                <input type="hidden" id="edit-stock-original">
-                                <input type="text" id="edit-nombre" placeholder="Nombre del producto" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="number" id="edit-precio" placeholder="Precio" step="0.01" required style="padding: 8px; flex: 1; min-width: 120px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="number" id="edit-stock" placeholder="Stock a agregar" required style="padding: 8px; flex: 1; min-width: 100px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="edit-categoria" placeholder="Categoría" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="edit-descripcion" placeholder="Descripción del producto" style="padding: 8px; flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <button type="submit" style="padding: 8px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; cursor: pointer;">Actualizar</button>
-                                <button type="button" id="btn-cancelar-edit" style="padding: 8px 15px; background-color: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
-                            </form>
-                        </div>
+        <!-- FORMULARIO DESPLEGABLE PARA EDITAR PRODUCTO -->
+        <div class="card" id="card-formulario-producto" style="margin-bottom: 20px; display: none; background-color: #0f172a; border: 1px solid rgba(56, 189, 248, 0.3);">
+            <h3 id="titulo-form-productos" style="color: #f8fafc; margin-bottom: 10px;">Editar Producto</h3>
+            <form id="form-editar-producto" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
+                <input type="hidden" id="edit-id">
+                <input type="hidden" id="edit-stock-original">
+                <input type="text" id="edit-nombre" placeholder="Nombre del producto" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="number" id="edit-precio" placeholder="Precio" step="0.01" required style="padding: 10px 12px; flex: 1; min-width: 120px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="number" id="edit-stock" placeholder="Stock a agregar" required style="padding: 10px 12px; flex: 1; min-width: 100px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="edit-categoria" placeholder="Categoría" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="edit-descripcion" placeholder="Descripción del producto" style="padding: 10px 12px; flex: 1; min-width: 200px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <button type="submit" style="padding: 10px 18px; background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">Actualizar</button>
+                <button type="button" id="btn-cancelar-edit" style="padding: 10px 18px; background-color: #475569; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cancelar</button>
+            </form>
+        </div>
 
-                        <!-- TABLA DE PRODUCTOS EN STOCK -->
-                        <div class="card">
-                            <h3>Productos en stock</h3>
-                            <div id="contenedor-tabla">
-                                <p style="padding: 10px; color: #64748b;">Cargando productos...</p>
-                            </div>
-                        </div>
-                    `;
+        <!-- TABLA DE PRODUCTOS EN STOCK -->
+        <div class="card">
+            <h3 style="color: #f8fafc; margin-bottom: 10px;">Productos en stock</h3>
+            <div id="contenedor-tabla">
+                <p style="padding: 15px; color: #94a3b8; text-align: center;">Cargando productos...</p>
+            </div>
+        </div>
+    `;
 
-                    function cargarInventario() {
-                        fetch('https://localhost:7137/api/productos')
-                            .then(response => response.json())
-                            .then(productos => {
-                                const contenedor = document.getElementById('contenedor-tabla');
+    function cargarInventario() {
+        fetch('https://localhost:7137/api/productos')
+            .then(response => response.json())
+            .then(productos => {
+                const contenedor = document.getElementById('contenedor-tabla');
 
-                                if (productos.length === 0) {
-                                    contenedor.innerHTML = '<p style="padding: 10px; text-align: center;">No hay productos registrados.</p>';
-                                    return;
-                                }
+                if (productos.length === 0) {
+                    contenedor.innerHTML = '<p style="padding: 15px; text-align: center; color: #94a3b8;">No hay productos registrados.</p>';
+                    return;
+                }
 
-                                let tablaHTML = `
-                                    <table style="width:100%; border-collapse: collapse; margin-top:15px;">
-                                        <thead>
-                                            <tr style="background-color:#1e293b; color: white; text-align: left;">
-                                                <th style="padding: 10px;">ID</th>
-                                                <th style="padding: 10px;">Nombre</th>
-                                                <th style="padding: 10px;">Precio</th>
-                                                <th style="padding: 10px;">Stock</th>
-                                                <th style="padding: 10px;">Categoría</th>
-                                                <th style="padding: 10px; text-align: center;">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                `;
-
-                                productos.forEach(prod => {
-                                    const estiloStock = prod.stock <= 10 ? 'color: red; font-weight: bold;' : '';
-                                    tablaHTML += `
-                                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 10px;">${prod.id}</td>
-                                            <td style="padding: 10px;">${prod.nombre}</td>
-                                            <td style="padding: 10px;">$${prod.precio}</td>
-                                            <td style="padding: 10px; ${estiloStock}">${prod.stock}</td>
-                                            <td style="padding: 10px;">${prod.categoria || 'General'}</td>
-                                            <td style="padding: 10px; text-align: center; display: flex; gap: 5px; justify-content: center;">
-                                                <button class="btn-editar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-stock="${prod.stock}" data-categoria="${prod.categoria || ''}" data-descripcion="${prod.descripcion || ''}" style="padding: 5px 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
-                                                <button class="btn-eliminar-producto" data-id="${prod.id}" style="padding: 5px 10px; background-color: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Eliminar</button>
-                                            </td>
-                                        </tr>
-                                    `;
-                                });
-
-                                tablaHTML += `</tbody></table>`;
-                                contenedor.innerHTML = tablaHTML;
-
-                                // Evento para abrir el formulario de edición
-                                document.querySelectorAll('.btn-editar').forEach(btn => {
-                                    btn.addEventListener('click', (e) => {
-                                        const id = e.target.getAttribute('data-id');
-                                        const nombre = e.target.getAttribute('data-nombre');
-                                        const precio = e.target.getAttribute('data-precio');
-                                        const stockactual = e.target.getAttribute('data-stock');
-                                        const categoria = e.target.getAttribute('data-categoria');
-                                        const descripcion = e.target.getAttribute('data-descripcion');
-
-                                        document.getElementById('card-formulario-producto').style.display = 'block';
-                                        document.getElementById('edit-id').value = id;
-                                        document.getElementById('edit-stock-original').value = stockactual;
-                                        document.getElementById('edit-nombre').value = nombre;
-                                        document.getElementById('edit-precio').value = precio;
-                                        document.getElementById('edit-stock').value = '';
-                                        document.getElementById('edit-categoria').value = categoria;
-                                        document.getElementById('edit-descripcion').value = descripcion;
-
-                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    });
-                                });
-
-                                // Evento para Eliminar producto de la base de datos
-                                document.querySelectorAll('.btn-eliminar-producto').forEach(btn => {
-                                    btn.addEventListener('click', (e) => {
-                                        const idProducto = e.target.getAttribute('data-id');
-
-                                        if (confirm('¿Estás seguro de que deseas eliminar este producto del inventario?')) {
-                                            fetch(`https://localhost:7137/api/productos/${idProducto}`, {
-                                                method: 'DELETE'
-                                            })
-                                            .then(response => {
-                                                if (response.ok) {
-                                                    alert('¡Producto eliminado con éxito!');
-                                                    cargarInventario(); // Refrescar la tabla
-                                                } else {
-                                                    alert('No se pudo eliminar el producto (puede estar asociado a ventas registradas).');
-                                                }
-                                            })
-                                            .catch(err => console.error('Error en DELETE Producto:', err));
-                                        }
-                                    });
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Error al cargar los productos:', error);
-                                document.getElementById('contenedor-tabla').innerHTML = '<p style="padding: 10px; color: red; text-align: center;">Error al cargar los productos.</p>';
-                            });
-                    }
-
-                    cargarInventario();
-
-                    setTimeout(() => {
-                        // Lógica para Crear Nuevo Producto
-                        const formCrearProd = document.getElementById('form-crear-producto-inventario');
-                        if (formCrearProd) {
-                            formCrearProd.addEventListener('submit', (e) => {
-                                e.preventDefault();
-                                const nuevoProductoData = {
-                                    nombre: document.getElementById('nuevo-prod-nombre').value.trim(),
-                                    precio: parseFloat(document.getElementById('nuevo-prod-precio').value),
-                                    stock: parseInt(document.getElementById('nuevo-prod-stock').value),
-                                    categoria: document.getElementById('nuevo-prod-categoria').value.trim(),
-                                    descripcion: document.getElementById('nuevo-prod-descripcion').value.trim()
-                                };
-
-                                fetch('https://localhost:7137/api/productos', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(nuevoProductoData)
-                                })
-                                .then(response => {
-                                    if (response.ok) {
-                                        alert('¡Producto creado y registrado con éxito en el inventario!');
-                                        formCrearProd.reset();
-                                        cargarInventario();
-                                    } else {
-                                        response.text().then(err => alert('Error al crear el producto: ' + err));
-                                    }
-                                })
-                                .catch(err => console.error('Error en POST Producto:', err));
-                            });
-                        }
-
-                        // Lógica para Editar / Actualizar Producto
-                        const formEditar = document.getElementById('form-editar-producto');
-                        const btnCancelar = document.getElementById('btn-cancelar-edit');
-
-                        if (btnCancelar) {
-                            btnCancelar.addEventListener('click', () => {
-                                document.getElementById('card-formulario-producto').style.display = 'none';
-                                formEditar.reset();
-                            });
-                        }
-
-                        if (formEditar) {
-                            formEditar.addEventListener('submit', (e) => {
-                                e.preventDefault();
-                                const id = document.getElementById('edit-id').value;
-                                const stockOriginal = parseInt(document.getElementById('edit-stock-original').value) || 0;
-                                const cantidadIngresada = parseInt(document.getElementById('edit-stock').value) || 0;
-
-                                const stockFinal = stockOriginal + cantidadIngresada;
-
-                                const productoActualizado = {
-                                    id: parseInt(id),
-                                    nombre: document.getElementById('edit-nombre').value,
-                                    precio: parseFloat(document.getElementById('edit-precio').value),
-                                    stock: stockFinal,
-                                    categoria: document.getElementById('edit-categoria').value,
-                                    descripcion: document.getElementById('edit-descripcion').value
-                                };
-
-                                fetch(`https://localhost:7137/api/productos/${id}`, {
-                                    method: 'PUT',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(productoActualizado)
-                                })
-                                .then(response => {
-                                    if (response.ok) {
-                                        alert(`Producto actualizado con éxito (Anterior: ${stockOriginal} + Agregados: ${cantidadIngresada} = Total: ${stockFinal})`);
-                                        document.getElementById('card-formulario-producto').style.display = 'none';
-                                        formEditar.reset();
-                                        cargarInventario();
-                                    } else {
-                                        response.text().then(err => alert('Error al actualizar producto: ' + err));
-                                    }
-                                })
-                                .catch(err => console.error('Error en PUT Producto:', err));
-                            });
-                        }
-                    }, 100);
-                    break;
-
-              case 'clientes':
-                    sectionTitle.textContent = 'Gestión de Clientes';
-                    contentBody.innerHTML = `
-                        <!-- FORMULARIO DESPLEGABLE (ACORDEÓN) PARA EDITAR CLIENTE -->
-                        <div class="card" id="card-formulario-cliente" style="margin-bottom: 20px; display: none; background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                            <h3 id="titulo-form-clientes">Editar Cliente</h3>
-                            <form id="form-editar-cliente" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
-                                <input type="hidden" id="edit-cliente-id">
-                                <input type="text" id="edit-cliente-nombre" placeholder="Nombre completo" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="edit-cliente-cedula" placeholder="Cédula" required style="padding: 8px; flex: 1; min-width: 130px; border: 1px solid #cbd5e1; border-radius: 4px;">   
-                                <input type="text" id="edit-cliente-telefono" placeholder="Número de teléfono" required style="padding: 8px; flex: 1; min-width: 130px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="email" id="edit-cliente-email" placeholder="Correo electrónico" style="padding: 8px; flex: 1; min-width: 180px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="edit-cliente-direccion" placeholder="Dirección" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <button type="submit" style="padding: 8px 15px; background-color: #16a34a; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Actualizar</button>
-                                <button type="button" id="btn-cancelar-edit-cliente" style="padding: 8px 15px; background-color: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
-                            </form>
-                        </div>
-
-                        <!-- FORMULARIO PARA REGISTRAR NUEVO CLIENTE -->
-                        <div class="card" style="margin-bottom: 20px;">
-                            <h3>Registrar nuevo Cliente</h3>
-                            <form id="form-cliente" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                                <input type="text" id="nombre-cliente" placeholder="Nombre completo" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="cedula-cliente" placeholder="Cédula" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">   
-                                <input type="text" id="telefono-cliente" placeholder="Número de teléfono" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="email" id="email-cliente" placeholder="Correo electrónico" style="padding: 8px; flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <input type="text" id="direccion-cliente" placeholder="Dirección" required style="padding: 8px; flex: 1; min-width: 150px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                <button type="submit" style="padding: 8px 15px; background-color: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer;">Guardar cliente</button>
-                            </form>
-                        </div>
-
-                        <!-- TABLA DE CLIENTES Y FILTRO -->
-                        <div class="card">
-                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-                                <h3 style="margin: 0;">Clientes Registrados</h3>
-                                <input type="text" id="input-buscar-cliente-tabla" placeholder="Buscar cliente por nombre o cédula..." style="padding: 8px; width: 280px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                            </div>
-                            <div id="contenedor-tabla-clientes">
-                                <p style="padding: 10px; color: #64748b;">Cargando clientes...</p>
-                            </div>
-                        </div>
-                    `;
-
-                    let listaClientesGlobal = [];
-                    // Conjunto para almacenar los IDs de los clientes eliminados de la vista principal en esta sesión
-                    let idsClientesEliminados = JSON.parse(localStorage.getItem('clientesEliminadosUI') || '[]');
-
-                    function cargarClientes() {
-                        fetch('https://localhost:7137/api/clientes')
-                            .then(response => response.json())
-                            .then(clientes => {
-                                // Filtramos para excluir permanentemente de la vista aquellos cuyo ID esté en la lista de eliminados
-                                listaClientesGlobal = clientes.filter(c => !idsClientesEliminados.includes(c.id));
-                                renderizarTablaClientes(listaClientesGlobal);
-                            })
-                            .catch(error => {
-                                console.error('Error al cargar los clientes:', error);
-                                document.getElementById('contenedor-tabla-clientes').innerHTML = '<p style="padding: 10px; color: red; text-align: center;">Error al cargar los clientes.</p>';
-                            });
-                    }
-
-                    function renderizarTablaClientes(clientesAMostrar) {
-                        const contenedor = document.getElementById('contenedor-tabla-clientes');
-
-                        if (clientesAMostrar.length === 0) {
-                            contenedor.innerHTML = '<p style="padding: 10px; text-align: center; color: #64748b;">No hay clientes para mostrar.</p>';
-                            return;
-                        }
-
-                        let tablaHTML = `
-                            <table style="width:100%; border-collapse: collapse; margin-top:15px;">
-                                <thead>
-                                    <tr style="background-color:#1e293b; color: white; text-align: left;">
-                                        <th style="padding: 10px;">ID</th>
-                                        <th style="padding: 10px;">Cedula</th>
-                                        <th style="padding: 10px;">Nombre</th>
-                                        <th style="padding: 10px;">Teléfono</th>
-                                        <th style="padding: 10px;">E-mail</th>
-                                        <th style="padding: 10px; text-align: center;">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        `;
-
-                        clientesAMostrar.forEach(cli => {
-                            tablaHTML += `
-                                <tr style="border-bottom: 1px solid #e2e8f0;">
-                                    <td style="padding: 10px;">${cli.id}</td>
-                                    <td style="padding: 10px;">${cli.cedula}</td>
-                                    <td style="padding: 10px;">${cli.nombre}</td>
-                                    <td style="padding: 10px;">${cli.telefono || 'N/A'}</td>
-                                    <td style="padding: 10px;">${cli.email || 'N/A'}</td>
-                                    <td style="padding: 10px; text-align: center;">
-                                        <div style="display: flex; gap: 5px; justify-content: center;">
-                                            <button class="btn-editar-cliente" data-id="${cli.id}" data-cedula="${cli.cedula}" data-nombre="${cli.nombre}" data-telefono="${cli.telefono || ''}" data-email="${cli.email || ''}" data-direccion="${cli.direccion || ''}" style="padding: 5px 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
-                                            <button class="btn-eliminar-cliente" data-id="${cli.id}" style="padding: 5px 10px; background-color: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Eliminar</button>
-                                        </div>
-                                    </td>
+                let tablaHTML = `
+                    <div style="overflow-x: auto;">
+                        <table style="width:100%; border-collapse: collapse; margin-top:5px; text-align: left; color: #f3f4f6;">
+                            <thead>
+                                <tr style="background-color:#020617; color: #38bdf8; border-bottom: 2px solid rgba(56, 189, 248, 0.2);">
+                                    <th style="padding: 12px;">ID</th>
+                                    <th style="padding: 12px;">Nombre</th>
+                                    <th style="padding: 12px;">Precio</th>
+                                    <th style="padding: 12px;">Stock</th>
+                                    <th style="padding: 12px;">Categoría</th>
+                                    <th style="padding: 12px; text-align: center;">Acciones</th>
                                 </tr>
-                            `;
-                        });
+                            </thead>
+                            <tbody>
+                `;
 
-                        tablaHTML += `</tbody></table>`;
-                        contenedor.innerHTML = tablaHTML;
-
-                        // Evento para Editar (Desplegar acordeón)
-                        document.querySelectorAll('.btn-editar-cliente').forEach(btn => {
-                            btn.addEventListener('click', (e) => {
-                                const id = e.target.getAttribute('data-id');
-                                const cedula = e.target.getAttribute('data-cedula');
-                                const nombre = e.target.getAttribute('data-nombre');
-                                const telefono = e.target.getAttribute('data-telefono');
-                                const email = e.target.getAttribute('data-email');
-                                const direccion = e.target.getAttribute('data-direccion');
-
-                                document.getElementById('card-formulario-cliente').style.display = 'block';
-                                document.getElementById('edit-cliente-id').value = id;
-                                document.getElementById('edit-cliente-cedula').value = cedula;
-                                document.getElementById('edit-cliente-nombre').value = nombre;
-                                document.getElementById('edit-cliente-telefono').value = telefono;
-                                document.getElementById('edit-cliente-email').value = email;
-                                document.getElementById('edit-cliente-direccion').value = direccion;
-
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                            });
-                        });
-
-                        // Evento para Eliminar de la lista principal (permanente en la vista, intacto en la base de datos)
-                        document.querySelectorAll('.btn-eliminar-cliente').forEach(btn => {
-                            btn.addEventListener('click', (e) => {
-                                const idCliente = parseInt(e.target.getAttribute('data-id'));
-                                
-                                if (confirm('¿Estás seguro de que deseas eliminar este cliente de la lista? (Permanecerá guardado en la base de datos por seguridad de las ventas).')) {
-                                    if (!idsClientesEliminados.includes(idCliente)) {
-                                        idsClientesEliminados.push(idCliente);
-                                        localStorage.setItem('clientesEliminadosUI', JSON.stringify(idsClientesEliminados));
-                                    }
-                                    
-                                    listaClientesGlobal = listaClientesGlobal.filter(c => c.id !== idCliente);
-                                    
-                                    // Validar si hay texto en el buscador para aplicar el filtro actual
-                                    const textoBusqueda = document.getElementById('input-buscar-cliente-tabla').value.toLowerCase().trim();
-                                    if (textoBusqueda) {
-                                        const filtrados = listaClientesGlobal.filter(cli => 
-                                            cli.cedula.toLowerCase().includes(textoBusqueda) || 
-                                            cli.nombre.toLowerCase().includes(textoBusqueda)
-                                        );
-                                        renderizarTablaClientes(filtrados);
-                                    } else {
-                                        renderizarTablaClientes(listaClientesGlobal);
-                                    }
-
-                                    alert('Cliente eliminado de la lista principal con éxito.');
-                                }
-                            });
-                        });
-                    }
-
-                    cargarClientes();
-
-                    setTimeout(() => {
-                        // Buscador en tiempo real por Cédula o Nombre
-                        const inputBusqueda = document.getElementById('input-buscar-cliente-tabla');
-                        if (inputBusqueda) {
-                            inputBusqueda.addEventListener('input', (e) => {
-                                const texto = e.target.value.toLowerCase().trim();
-                                const resultados = listaClientesGlobal.filter(cli => 
-                                    cli.cedula.toLowerCase().includes(texto) || 
-                                    cli.nombre.toLowerCase().includes(texto)
-                                );
-                                renderizarTablaClientes(resultados);
-                            });
-                        }
-
-                        // 1. Registrar Nuevo Cliente con validación de error (Cédula duplicada)
-                        const formCliente = document.getElementById('form-cliente');
-                        if (formCliente) {
-                            formCliente.addEventListener('submit', (e) => {
-                                e.preventDefault();
-
-                                const nuevoCliente = {
-                                    nombre: document.getElementById('nombre-cliente').value,
-                                    cedula: document.getElementById('cedula-cliente').value,
-                                    telefono: document.getElementById('telefono-cliente').value,
-                                    email: document.getElementById('email-cliente').value,
-                                    direccion: document.getElementById('direccion-cliente').value
-                                };
-
-                                fetch('https://localhost:7137/api/clientes', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(nuevoCliente)
-                                })
-                                .then(async response => {
-                                    if (response.ok) {
-                                        formCliente.reset();
-                                        cargarClientes();
-                                        alert('¡Cliente registrado con éxito!');
-                                    } else {
-                                        const mensajeError = await response.text();
-                                        alert('Error: ' + mensajeError);
-                                    }
-                                })
-                                .catch(err => console.error('Error en POST:', err));
-                            });
-                        }
-
-                        // 2. Editar / Actualizar Cliente Existente
-                        const formEditarCliente = document.getElementById('form-editar-cliente');
-                        const btnCancelarEditCliente = document.getElementById('btn-cancelar-edit-cliente');
-
-                        if (btnCancelarEditCliente) {
-                            btnCancelarEditCliente.addEventListener('click', () => {
-                                document.getElementById('card-formulario-cliente').style.display = 'none';
-                                formEditarCliente.reset();
-                            });
-                        }
-
-                        if (formEditarCliente) {
-                            formEditarCliente.addEventListener('submit', (e) => {
-                                e.preventDefault();
-                                const id = document.getElementById('edit-cliente-id').value;
-
-                                const clienteActualizado = {
-                                    id: parseInt(id),
-                                    nombre: document.getElementById('edit-cliente-nombre').value,
-                                    cedula: document.getElementById('edit-cliente-cedula').value,
-                                    telefono: document.getElementById('edit-cliente-telefono').value,
-                                    email: document.getElementById('edit-cliente-email').value,
-                                    direccion: document.getElementById('edit-cliente-direccion').value
-                                };
-
-                                fetch(`https://localhost:7137/api/clientes/${id}`, {
-                                    method: 'PUT',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(clienteActualizado)
-                                })
-                                .then(async response => {
-                                    if (response.ok) {
-                                        alert('¡Cliente actualizado con éxito!');
-                                        document.getElementById('card-formulario-cliente').style.display = 'none';
-                                        formEditarCliente.reset();
-                                        cargarClientes();
-                                    } else {
-                                        const mensajeError = await response.text();
-                                        alert('Error al actualizar: ' + mensajeError);
-                                    }
-                                })
-                                .catch(err => console.error('Error en PUT Cliente:', err));
-                            });
-                        }
-                    }, 100);
-                    break;
-case 'pos':
-                    sectionTitle.textContent = 'Punto de Venta (POS)';
-                    contentBody.innerHTML = `
-                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
-                            <div class="card">
-                                <h3>Seleccionar Productos</h3>
-                                <div style="display: flex; gap: 10px; margin-top: 15px; margin-bottom: 15px;">
-                                    <div style="flex: 2; position: relative;">
-                                        <input type="text" id="input-buscar-producto" placeholder="Escribe para buscar por iniciales o nombre..." list="lista-sugerencias-productos" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
-                                        <datalist id="lista-sugerencias-productos">
-                                            <!-- Las recomendaciones se cargan dinámicamente aquí -->
-                                        </datalist>
-                                        <input type="hidden" id="producto-seleccionado-id" value="">
-                                    </div>
-                                    <input type="number" id="cantidad-producto" value="1" min="1" style="padding: 8px; width: 80px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                    <button type="button" id="btn-agregar-carrito" style="padding: 8px 15px; background-color: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer;">Agregar</button>
+                productos.forEach(prod => {
+                    const estiloStock = prod.stock <= 10 ? 'color: #f87171; font-weight: bold;' : 'color: #f3f4f6;';
+                    tablaHTML += `
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;">
+                            <td style="padding: 12px; color: #94a3b8;">${prod.id}</td>
+                            <td style="padding: 12px; font-weight: 500;">${prod.nombre}</td>
+                            <td style="padding: 12px; color: #34d399;">$${prod.precio}</td>
+                            <td style="padding: 12px; ${estiloStock}">${prod.stock}</td>
+                            <td style="padding: 12px; color: #94a3b8;">${prod.categoria || 'General'}</td>
+                            <td style="padding: 12px; text-align: center;">
+                                <div style="display: flex; gap: 6px; justify-content: center;">
+                                    <button class="btn-editar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-stock="${prod.stock}" data-categoria="${prod.categoria || ''}" data-descripcion="${prod.descripcion || ''}" style="padding: 6px 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Editar</button>
+                                    <button class="btn-eliminar-producto" data-id="${prod.id}" style="padding: 6px 12px; background-color: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Eliminar</button>
                                 </div>
-                                <h4>Carrito de Compras</h4>
-                                <table style="width:100%; border-collapse: collapse; margin-top:10px;">
-                                    <thead>
-                                        <tr style="background-color:#1e293b; color: white; text-align: left;">
-                                            <th style="padding: 8px;">Producto</th>
-                                            <th style="padding: 8px;">Precio</th>
-                                            <th style="padding: 8px; text-align: center;">Cantidad</th>
-                                            <th style="padding: 8px;">Subtotal</th> 
-                                            <th style="padding: 8px; text-align: center;">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="carrito-body">
-                                        <tr><td colspan="5" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="card">
-                                <h3>Datos de la venta</h3>
-                                <div style="margin-top: 15px; margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Buscar Cliente (Opcional):</label>
-                                    <div style="display: flex; gap: 8px;">
-                                        <input type="text" id="busqueda-cedula" placeholder="Digite la cédula..." style="padding: 8px; flex: 1; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                        <button type="button" id="btn-buscar-cliente" style="padding: 8px 12px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Buscar</button>
-                                    </div>
-                                </div>
-
-                                <div id="info-cliente-container" style="margin-bottom: 15px; padding: 12px; background: #f0fdf4; border-radius: 6px; border: 1px solid #bbf7d0; display: none;">
-                                    <p style="margin: 0; color: #166534; font-weight: bold;" id="texto-cliente-encontrado"></p>
-                                    <button type="button" id="btn-cambiar-cliente" style="margin-top: 6px; background: none; border: none; color: #2563eb; cursor: pointer; padding: 0; font-size: 0.85rem;">Cambiar cliente</button>
-                                </div>
-
-                                <div id="form-nuevo-cliente-pos" style="margin-bottom: 15px; padding: 12px; background: #fffbeb; border-radius: 6px; border: 1px solid #fde68a; display: none;">
-                                    <h4 style="margin: 0 0 8px 0; color: #b45309; font-size: 0.95rem;">Cliente no encontrado. Regístrese aquí:</h4>
-                                    <input type="text" id="pos-nuevo-nombre" placeholder="Nombre completo" required style="width: 100%; padding: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
-                                    <input type="text" id="pos-nuevo-telefono" placeholder="Número de teléfono" required style="width: 100%; padding: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
-                                    <input type="email" id="pos-nuevo-email" placeholder="Correo electrónico" style="width: 100%; padding: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
-                                    <input type="text" id="pos-nuevo-direccion" placeholder="Dirección" required style="width: 100%; padding: 6px; margin-bottom: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
-                                    <button type="button" id="btn-registrar-rapido" style="width: 100%; padding: 8px; background-color: #d97706; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Registrar y Seleccionar</button>
-                                </div>
-
-                                <input type="hidden" id="cliente-seleccionado-id" value="">
-
-                                <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
-                                    <h4 style="margin: 0 0 10px 0;">Resumen y Pago</h4>
-                                    <p style="font-size: 1.2rem; font-weight: bold; margin: 0 0 10px 0;">Total: $<span id="span-total">0.00</span></p>
-                                    
-                                    <div style="margin-bottom: 10px;">
-                                        <label style="display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: bold;">Método de Pago:</label>
-                                        <select id="select-metodo-pago" style="width: 100%; padding: 6px; margin-bottom: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
-                                            <option value="Efectivo">Efectivo</option>
-                                            <option value="Transferencia">Transferencia</option>
-                                            <option value="Datáfono">Datáfono</option>
-                                        </select>
-
-                                        <label style="display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: bold;">Monto Recibido / Pagado:</label>
-                                        <input type="number" id="input-monto-pago" placeholder="0.00" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" min="0" step="0.01">
-                                    </div>
-                                    
-                                    <p style="font-size: 1rem; font-weight: bold; margin: 8px 0 0 0; color: #16a34a;">Cambio (Vueltos): $<span id="span-cambio">0.00</span></p>
-                                </div>
-                                <button type="button" id="btn-procesar-venta" style="width: 100%; padding: 12px; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-bottom: 8px;">Procesar Venta</button>
-                                <button type="button" id="btn-cancelar-venta" style="width: 100%; padding: 10px; background-color: #64748b; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Cancelar Venta</button>
-                            </div>
-                        </div>
+                            </td>
+                        </tr>
                     `;
+                });
 
-                    let carrito = [];
-                    let productosGlobal = [];
-                    let clientesGlobal = [];
+                tablaHTML += `</tbody></table></div>`;
+                contenedor.innerHTML = tablaHTML;
 
-                    function renderizarDatalistProductos(listaProductos) {
-                        const datalist = document.getElementById('lista-sugerencias-productos');
-                        datalist.innerHTML = '';
-                        listaProductos.forEach(p => {
-                            datalist.innerHTML += `<option value="${p.nombre} - $${p.precio} (Stock: ${p.stock})">`;
-                        });
+                // Evento para abrir el formulario de edición
+                document.querySelectorAll('.btn-editar').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        const nombre = e.target.getAttribute('data-nombre');
+                        const precio = e.target.getAttribute('data-precio');
+                        const stockactual = e.target.getAttribute('data-stock');
+                        const categoria = e.target.getAttribute('data-categoria');
+                        const descripcion = e.target.getAttribute('data-descripcion');
+
+                        document.getElementById('card-formulario-producto').style.display = 'block';
+                        document.getElementById('edit-id').value = id;
+                        document.getElementById('edit-stock-original').value = stockactual;
+                        document.getElementById('edit-nombre').value = nombre;
+                        document.getElementById('edit-precio').value = precio;
+                        document.getElementById('edit-stock').value = '';
+                        document.getElementById('edit-categoria').value = categoria;
+                        document.getElementById('edit-descripcion').value = descripcion;
+
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+
+                // Evento para Eliminar producto de la base de datos
+                document.querySelectorAll('.btn-eliminar-producto').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idProducto = e.target.getAttribute('data-id');
+
+                        if (confirm('¿Estás seguro de que deseas eliminar este producto del inventario?')) {
+                            fetch(`https://localhost:7137/api/productos/${idProducto}`, {
+                                method: 'DELETE'
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('¡Producto eliminado con éxito!');
+                                    cargarInventario(); // Refrescar la tabla
+                                } else {
+                                    alert('No se pudo eliminar el producto (puede estar asociado a ventas registradas).');
+                                }
+                            })
+                            .catch(err => console.error('Error en DELETE Producto:', err));
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar los productos:', error);
+                document.getElementById('contenedor-tabla').innerHTML = '<p style="padding: 15px; color: #f87171; text-align: center;">Error al cargar los productos.</p>';
+            });
+    }
+
+    cargarInventario();
+
+    setTimeout(() => {
+        // Lógica para Crear Nuevo Producto
+        const formCrearProd = document.getElementById('form-crear-producto-inventario');
+        if (formCrearProd) {
+            formCrearProd.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nuevoProductoData = {
+                    nombre: document.getElementById('nuevo-prod-nombre').value.trim(),
+                    precio: parseFloat(document.getElementById('nuevo-prod-precio').value),
+                    stock: parseInt(document.getElementById('nuevo-prod-stock').value),
+                    categoria: document.getElementById('nuevo-prod-categoria').value.trim(),
+                    descripcion: document.getElementById('nuevo-prod-descripcion').value.trim()
+                };
+
+                fetch('https://localhost:7137/api/productos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoProductoData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('¡Producto creado y registrado con éxito en el inventario!');
+                        formCrearProd.reset();
+                        cargarInventario();
+                    } else {
+                        response.text().then(err => alert('Error al crear el producto: ' + err));
+                    }
+                })
+                .catch(err => console.error('Error en POST Producto:', err));
+            });
+        }
+
+        // Lógica para Editar / Actualizar Producto
+        const formEditar = document.getElementById('form-editar-producto');
+        const btnCancelar = document.getElementById('btn-cancelar-edit');
+
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', () => {
+                document.getElementById('card-formulario-producto').style.display = 'none';
+                formEditar.reset();
+            });
+        }
+
+        if (formEditar) {
+            formEditar.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-id').value;
+                const stockOriginal = parseInt(document.getElementById('edit-stock-original').value) || 0;
+                const cantidadIngresada = parseInt(document.getElementById('edit-stock').value) || 0;
+
+                const stockFinal = stockOriginal + cantidadIngresada;
+
+                const productoActualizado = {
+                    id: parseInt(id),
+                    nombre: document.getElementById('edit-nombre').value,
+                    precio: parseFloat(document.getElementById('edit-precio').value),
+                    stock: stockFinal,
+                    categoria: document.getElementById('edit-categoria').value,
+                    descripcion: document.getElementById('edit-descripcion').value
+                };
+
+                fetch(`https://localhost:7137/api/productos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productoActualizado)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert(`Producto actualizado con éxito (Anterior: ${stockOriginal} + Agregados: ${cantidadIngresada} = Total: ${stockFinal})`);
+                        document.getElementById('card-formulario-producto').style.display = 'none';
+                        formEditar.reset();
+                        cargarInventario();
+                    } else {
+                        response.text().then(err => alert('Error al actualizar producto: ' + err));
+                    }
+                })
+                .catch(err => console.error('Error en PUT Producto:', err));
+            });
+        }
+    }, 100);
+    break;
+
+        case 'clientes':
+    sectionTitle.textContent = 'Gestión de Clientes';
+    contentBody.innerHTML = `
+        <!-- FORMULARIO DESPLEGABLE (ACORDEÓN) PARA EDITAR CLIENTE -->
+        <div class="card" id="card-formulario-cliente" style="margin-bottom: 20px; display: none; background-color: #0f172a; border: 1px solid rgba(56, 189, 248, 0.3);">
+            <h3 id="titulo-form-clientes" style="color: #f8fafc; margin-bottom: 10px;">Editar Cliente</h3>
+            <form id="form-editar-cliente" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">  
+                <input type="hidden" id="edit-cliente-id">
+                <input type="text" id="edit-cliente-nombre" placeholder="Nombre completo" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="edit-cliente-cedula" placeholder="Cédula" required style="padding: 10px 12px; flex: 1; min-width: 130px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">   
+                <input type="text" id="edit-cliente-telefono" placeholder="Número de teléfono" required style="padding: 10px 12px; flex: 1; min-width: 130px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="email" id="edit-cliente-email" placeholder="Correo electrónico" style="padding: 10px 12px; flex: 1; min-width: 180px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="edit-cliente-direccion" placeholder="Dirección" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <button type="submit" style="padding: 10px 18px; background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">Actualizar</button>
+                <button type="button" id="btn-cancelar-edit-cliente" style="padding: 10px 18px; background-color: #475569; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cancelar</button>
+            </form>
+        </div>
+
+        <!-- FORMULARIO PARA REGISTRAR NUEVO CLIENTE -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3 style="color: #f8fafc; margin-bottom: 10px;">Registrar nuevo Cliente</h3>
+            <form id="form-cliente" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <input type="text" id="nombre-cliente" placeholder="Nombre completo" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="cedula-cliente" placeholder="Cédula" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">   
+                <input type="text" id="telefono-cliente" placeholder="Número de teléfono" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="email" id="email-cliente" placeholder="Correo electrónico" style="padding: 10px 12px; flex: 1; min-width: 200px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <input type="text" id="direccion-cliente" placeholder="Dirección" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                <button type="submit" style="padding: 10px 18px; background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Guardar cliente</button>
+            </form>
+        </div>
+
+        <!-- TABLA DE CLIENTES Y FILTRO -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #f8fafc;">Clientes Registrados</h3>
+                <input type="text" id="input-buscar-cliente-tabla" placeholder="Buscar cliente por nombre o cédula..." style="padding: 10px 12px; width: 280px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+            </div>
+            <div id="contenedor-tabla-clientes">
+                <p style="padding: 15px; color: #94a3b8; text-align: center;">Cargando clientes...</p>
+            </div>
+        </div>
+    `;
+
+    let listaClientesGlobal = [];
+    // Conjunto para almacenar los IDs de los clientes eliminados de la vista principal en esta sesión
+    let idsClientesEliminados = JSON.parse(localStorage.getItem('clientesEliminadosUI') || '[]');
+
+    function cargarClientes() {
+        fetch('https://localhost:7137/api/clientes')
+            .then(response => response.json())
+            .then(clientes => {
+                // Filtramos para excluir permanentemente de la vista aquellos cuyo ID esté en la lista de eliminados
+                listaClientesGlobal = clientes.filter(c => !idsClientesEliminados.includes(c.id));
+                renderizarTablaClientes(listaClientesGlobal);
+            })
+            .catch(error => {
+                console.error('Error al cargar los clientes:', error);
+                document.getElementById('contenedor-tabla-clientes').innerHTML = '<p style="padding: 15px; color: #f87171; text-align: center;">Error al cargar los clientes.</p>';
+            });
+    }
+
+    function renderizarTablaClientes(clientesAMostrar) {
+        const contenedor = document.getElementById('contenedor-tabla-clientes');
+
+        if (clientesAMostrar.length === 0) {
+            contenedor.innerHTML = '<p style="padding: 15px; text-align: center; color: #94a3b8;">No hay clientes para mostrar.</p>';
+            return;
+        }
+
+        let tablaHTML = `
+            <div style="overflow-x: auto;">
+                <table style="width:100%; border-collapse: collapse; margin-top:5px; text-align: left; color: #f3f4f6;">
+                    <thead>
+                        <tr style="background-color:#020617; color: #38bdf8; border-bottom: 2px solid rgba(56, 189, 248, 0.2);">
+                            <th style="padding: 12px;">ID</th>
+                            <th style="padding: 12px;">Cedula</th>
+                            <th style="padding: 12px;">Nombre</th>
+                            <th style="padding: 12px;">Teléfono</th>
+                            <th style="padding: 12px;">E-mail</th>
+                            <th style="padding: 12px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        clientesAMostrar.forEach(cli => {
+            tablaHTML += `
+                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;">
+                    <td style="padding: 12px; color: #94a3b8;">${cli.id}</td>
+                    <td style="padding: 12px;">${cli.cedula}</td>
+                    <td style="padding: 12px; font-weight: 500;">${cli.nombre}</td>
+                    <td style="padding: 12px; color: #94a3b8;">${cli.telefono || 'N/A'}</td>
+                    <td style="padding: 12px; color: #94a3b8;">${cli.email || 'N/A'}</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            <button class="btn-editar-cliente" data-id="${cli.id}" data-cedula="${cli.cedula}" data-nombre="${cli.nombre}" data-telefono="${cli.telefono || ''}" data-email="${cli.email || ''}" data-direccion="${cli.direccion || ''}" style="padding: 6px 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Editar</button>
+                            <button class="btn-eliminar-cliente" data-id="${cli.id}" style="padding: 6px 12px; background-color: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tablaHTML += `</tbody></table></div>`;
+        contenedor.innerHTML = tablaHTML;
+
+        // Evento para Editar (Desplegar acordeón)
+        document.querySelectorAll('.btn-editar-cliente').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                const cedula = e.target.getAttribute('data-cedula');
+                const nombre = e.target.getAttribute('data-nombre');
+                const telefono = e.target.getAttribute('data-telefono');
+                const email = e.target.getAttribute('data-email');
+                const direccion = e.target.getAttribute('data-direccion');
+
+                document.getElementById('card-formulario-cliente').style.display = 'block';
+                document.getElementById('edit-cliente-id').value = id;
+                document.getElementById('edit-cliente-cedula').value = cedula;
+                document.getElementById('edit-cliente-nombre').value = nombre;
+                document.getElementById('edit-cliente-telefono').value = telefono;
+                document.getElementById('edit-cliente-email').value = email;
+                document.getElementById('edit-cliente-direccion').value = direccion;
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Evento para Eliminar de la lista principal (permanente en la vista, intacto en la base de datos)
+        document.querySelectorAll('.btn-eliminar-cliente').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idCliente = parseInt(e.target.getAttribute('data-id'));
+                
+                if (confirm('¿Estás seguro de que deseas eliminar este cliente de la lista? (Permanecerá guardado en la base de datos por seguridad de las ventas).')) {
+                    if (!idsClientesEliminados.includes(idCliente)) {
+                        idsClientesEliminados.push(idCliente);
+                        localStorage.setItem('clientesEliminadosUI', JSON.stringify(idsClientesEliminados));
+                    }
+                    
+                    listaClientesGlobal = listaClientesGlobal.filter(c => c.id !== idCliente);
+                    
+                    // Validar si hay texto en el buscador para aplicar el filtro actual
+                    const textoBusqueda = document.getElementById('input-buscar-cliente-tabla').value.toLowerCase().trim();
+                    if (textoBusqueda) {
+                        const filtrados = listaClientesGlobal.filter(cli => 
+                            cli.cedula.toLowerCase().includes(textoBusqueda) || 
+                            cli.nombre.toLowerCase().includes(textoBusqueda)
+                        );
+                        renderizarTablaClientes(filtrados);
+                    } else {
+                        renderizarTablaClientes(listaClientesGlobal);
                     }
 
-                    function cargarDatosPOS() {
-                        fetch('https://localhost:7137/api/productos')
-                            .then(res => res.json())
-                            .then(data => {
-                                productosGlobal = data;
-                                renderizarDatalistProductos(productosGlobal);
-                            });
+                    alert('Cliente eliminado de la lista principal con éxito.');
+                }
+            });
+        });
+    }
 
-                        fetch('https://localhost:7137/api/clientes')
-                            .then(res => res.json())
-                            .then(data => {
-                                clientesGlobal = data;
-                            });
+    cargarClientes();
+
+    setTimeout(() => {
+        // Buscador en tiempo real por Cédula o Nombre
+        const inputBusqueda = document.getElementById('input-buscar-cliente-tabla');
+        if (inputBusqueda) {
+            inputBusqueda.addEventListener('input', (e) => {
+                const texto = e.target.value.toLowerCase().trim();
+                const resultados = listaClientesGlobal.filter(cli => 
+                    cli.cedula.toLowerCase().includes(texto) || 
+                    cli.nombre.toLowerCase().includes(texto)
+                );
+                renderizarTablaClientes(resultados);
+            });
+        }
+
+        // 1. Registrar Nuevo Cliente con validación de error (Cédula duplicada)
+        const formCliente = document.getElementById('form-cliente');
+        if (formCliente) {
+            formCliente.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const nuevoCliente = {
+                    nombre: document.getElementById('nombre-cliente').value,
+                    cedula: document.getElementById('cedula-cliente').value,
+                    telefono: document.getElementById('telefono-cliente').value,
+                    email: document.getElementById('email-cliente').value,
+                    direccion: document.getElementById('direccion-cliente').value
+                };
+
+                fetch('https://localhost:7137/api/clientes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoCliente)
+                })
+                .then(async response => {
+                    if (response.ok) {
+                        formCliente.reset();
+                        cargarClientes();
+                        alert('¡Cliente registrado con éxito!');
+                    } else {
+                        const mensajeError = await response.text();
+                        alert('Error: ' + mensajeError);
+                    }
+                })
+                .catch(err => console.error('Error en POST:', err));
+            });
+        }
+
+        // 2. Editar / Actualizar Cliente Existente
+        const formEditarCliente = document.getElementById('form-editar-cliente');
+        const btnCancelarEditCliente = document.getElementById('btn-cancelar-edit-cliente');
+
+        if (btnCancelarEditCliente) {
+            btnCancelarEditCliente.addEventListener('click', () => {
+                document.getElementById('card-formulario-cliente').style.display = 'none';
+                formEditarCliente.reset();
+            });
+        }
+
+        if (formEditarCliente) {
+            formEditarCliente.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-cliente-id').value;
+
+                const clienteActualizado = {
+                    id: parseInt(id),
+                    nombre: document.getElementById('edit-cliente-nombre').value,
+                    cedula: document.getElementById('edit-cliente-cedula').value,
+                    telefono: document.getElementById('edit-cliente-telefono').value,
+                    email: document.getElementById('edit-cliente-email').value,
+                    direccion: document.getElementById('edit-cliente-direccion').value
+                };
+
+                fetch(`https://localhost:7137/api/clientes/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(clienteActualizado)
+                })
+                .then(async response => {
+                    if (response.ok) {
+                        alert('¡Cliente actualizado con éxito!');
+                        document.getElementById('card-formulario-cliente').style.display = 'none';
+                        formEditarCliente.reset();
+                        cargarClientes();
+                    } else {
+                        const mensajeError = await response.text();
+                        alert('Error al actualizar: ' + mensajeError);
+                    }
+                })
+                .catch(err => console.error('Error en PUT Cliente:', err));
+            });
+        }
+    }, 100);
+    break;
+case 'pos':
+    sectionTitle.textContent = 'Punto de Venta (POS)';
+    // [MODIFICACIÓN UI/UX]: Rejilla POS adaptada a modo oscuro, contrastes correctos y tarjetas estilizadas
+    contentBody.innerHTML = `
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+            <div class="card">
+                <h3 style="color: #f8fafc;">Seleccionar Productos</h3>
+                <div style="display: flex; gap: 10px; margin-top: 15px; margin-bottom: 15px;">
+                    <div style="flex: 2; position: relative;">
+                        <input type="text" id="input-buscar-producto" placeholder="Escribe para buscar por iniciales o nombre..." list="lista-sugerencias-productos" style="width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; box-sizing: border-box; outline: none;">
+                        <datalist id="lista-sugerencias-productos">
+                        </datalist>
+                        <input type="hidden" id="producto-seleccionado-id" value="">
+                    </div>
+                    <input type="number" id="cantidad-producto" value="1" min="1" style="padding: 10px; width: 80px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; text-align: center; outline: none;">
+                    <button type="button" id="btn-agregar-carrito" style="padding: 10px 18px; background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Agregar</button>
+                </div>
+                <h4 style="color: #f8fafc; margin-top: 20px; margin-bottom: 10px;">Carrito de Compras</h4>
+                <div style="overflow-x: auto;">
+                    <table style="width:100%; border-collapse: collapse; text-align: left; color: #f3f4f6;">
+                        <thead>
+                            <tr style="background-color:#020617; color: #38bdf8; border-bottom: 2px solid rgba(56, 189, 248, 0.2);">
+                                <th style="padding: 10px;">Producto</th>
+                                <th style="padding: 10px;">Precio</th>
+                                <th style="padding: 10px; text-align: center;">Cantidad</th>
+                                <th style="padding: 10px;">Subtotal</th> 
+                                <th style="padding: 10px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="carrito-body">
+                            <tr><td colspan="5" style="padding: 15px; text-align: center; color: #94a3b8;">No hay productos en el carrito.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="color: #f8fafc;">Datos de la venta</h3>
+                <div style="margin-top: 15px; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #94a3b8; font-size: 0.9rem;">Buscar Cliente (Opcional):</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="busqueda-cedula" placeholder="Digite la cédula..." style="padding: 10px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; flex: 1; outline: none;">
+                        <button type="button" id="btn-buscar-cliente" style="padding: 10px 14px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Buscar</button>
+                    </div>
+                </div>
+
+                <div id="info-cliente-container" style="margin-bottom: 15px; padding: 12px; background: rgba(22, 163, 74, 0.1); border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.3); display: none;">
+                    <p style="margin: 0; color: #4ade80; font-weight: 500;" id="texto-cliente-encontrado"></p>
+                    <button type="button" id="btn-cambiar-cliente" style="margin-top: 6px; background: none; border: none; color: #38bdf8; cursor: pointer; padding: 0; font-size: 0.85rem;">Cambiar cliente</button>
+                </div>
+
+                <div id="form-nuevo-cliente-pos" style="margin-bottom: 15px; padding: 12px; background: rgba(217, 119, 6, 0.1); border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3); display: none;">
+                    <h4 style="margin: 0 0 8px 0; color: #fbbf24; font-size: 0.95rem;">Cliente no encontrado. Regístrese aquí:</h4>
+                    <input type="text" id="pos-nuevo-nombre" placeholder="Nombre completo" required style="width: 100%; padding: 8px 10px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; margin-bottom: 8px; box-sizing: border-box; outline: none;">
+                    <input type="text" id="pos-nuevo-telefono" placeholder="Número de teléfono" required style="width: 100%; padding: 8px 10px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; margin-bottom: 8px; box-sizing: border-box; outline: none;">
+                    <input type="email" id="pos-nuevo-email" placeholder="Correo electrónico" style="width: 100%; padding: 8px 10px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; margin-bottom: 8px; box-sizing: border-box; outline: none;">
+                    <input type="text" id="pos-nuevo-direccion" placeholder="Dirección" required style="width: 100%; padding: 8px 10px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; margin-bottom: 8px; box-sizing: border-box; outline: none;">
+                    <button type="button" id="btn-registrar-rapido" style="width: 100%; padding: 9px; background-color: #d97706; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Registrar y Seleccionar</button>
+                </div>
+
+                <input type="hidden" id="cliente-seleccionado-id" value="">
+
+                <div style="background-color: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <h4 style="margin: 0 0 10px 0; color: #f8fafc;">Resumen y Pago</h4>
+                    <p style="font-size: 1.2rem; font-weight: bold; margin: 0 0 12px 0; color: #38bdf8;">Total: $<span id="span-total">0.00</span></p>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: 500; color: #94a3b8;">Método de Pago:</label>
+                        <select id="select-metodo-pago" style="width: 100%; padding: 9px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; margin-bottom: 10px; box-sizing: border-box; outline: none;">
+                            <option value="Efectivo" style="background: #111827; color: #f3f4f6;">Efectivo</option>
+                            <option value="Transferencia" style="background: #111827; color: #f3f4f6;">Transferencia</option>
+                            <option value="Datáfono" style="background: #111827; color: #f3f4f6;">Datáfono</option>
+                        </select>
+
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: 500; color: #94a3b8;">Monto Recibido / Pagado:</label>
+                        <input type="number" id="input-monto-pago" placeholder="0.00" style="width: 100%; padding: 9px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; box-sizing: border-box; outline: none;" min="0" step="0.01">
+                    </div>
+                    
+                    <p style="font-size: 1rem; font-weight: bold; margin: 12px 0 0 0; color: #34d399;">Cambio (Vueltos): $<span id="span-cambio">0.00</span></p>
+                </div>
+                <button type="button" id="btn-procesar-venta" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">Procesar Venta</button>
+                <button type="button" id="btn-cancelar-venta" style="width: 100%; padding: 10px; background-color: #475569; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Cancelar Venta</button>
+            </div>
+        </div>
+    `;
+
+    let carrito = [];
+    let productosGlobal = [];
+    let clientesGlobal = [];
+
+    function renderizarDatalistProductos(listaProductos) {
+        const datalist = document.getElementById('lista-sugerencias-productos');
+        datalist.innerHTML = '';
+        listaProductos.forEach(p => {
+            datalist.innerHTML += `<option value="${p.nombre} - $${p.precio} (Stock: ${p.stock})">`;
+        });
+    }
+
+    function cargarDatosPOS() {
+        fetch('https://localhost:7137/api/productos')
+            .then(res => res.json())
+            .then(data => {
+                productosGlobal = data;
+                renderizarDatalistProductos(productosGlobal);
+            });
+
+        fetch('https://localhost:7137/api/clientes')
+            .then(res => res.json())
+            .then(data => {
+                clientesGlobal = data;
+            });
+    }
+
+    cargarDatosPOS();
+
+    setTimeout(() => {
+        const btnAgregar = document.getElementById('btn-agregar-carrito');
+        const btnProcesar = document.getElementById('btn-procesar-venta');
+        const btnCancelarVenta = document.getElementById('btn-cancelar-venta');
+        const btnBuscarCliente = document.getElementById('btn-buscar-cliente');
+        const inputBusquedaCedula = document.getElementById('busqueda-cedula');
+        const infoClienteContainer = document.getElementById('info-cliente-container');
+        const textoClienteEncontrado = document.getElementById('texto-cliente-encontrado');
+        const formNuevoClientePos = document.getElementById('form-nuevo-cliente-pos');
+        const clienteSeleccionadoIdInput = document.getElementById('cliente-seleccionado-id');
+        const btnRegistrarRapido = document.getElementById('btn-registrar-rapido');
+        const btnCambiarCliente = document.getElementById('btn-cambiar-cliente');
+        
+        const inputBuscarProducto = document.getElementById('input-buscar-producto');
+        const productoSeleccionadoIdInput = document.getElementById('producto-seleccionado-id');
+        const inputMontoPago = document.getElementById('input-monto-pago');
+        const selectMetodoPago = document.getElementById('select-metodo-pago');
+        const spanCambio = document.getElementById('span-cambio');
+        const spanTotal = document.getElementById('span-total');
+
+        inputBuscarProducto.addEventListener('input', () => {
+            const valorEscrito = inputBuscarProducto.value.trim();
+            const productoEncontrado = productosGlobal.find(p => 
+                valorEscrito.includes(p.nombre) || p.nombre.toLowerCase() === valorEscrito.toLowerCase()
+            );
+
+            if (productoEncontrado) {
+                productoSeleccionadoIdInput.value = productoEncontrado.id;
+            } else {
+                productoSeleccionadoIdInput.value = '';
+            }
+        });
+
+        function calcularCambio() {
+            const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
+            const montoPagado = parseFloat(inputMontoPago.value) || 0;
+            const cambio = montoPagado - totalGeneral;
+            spanCambio.textContent = cambio >= 0 ? cambio.toFixed(2) : '0.00';
+        }
+
+        inputMontoPago.addEventListener('input', calcularCambio);
+
+        btnBuscarCliente.addEventListener('click', () => {
+            const cedulaBuscada = inputBusquedaCedula.value.trim();
+            if (!cedulaBuscada) {
+                alert('Por favor ingrese un número de cédula para buscar.');
+                return;
+            }
+
+            const clienteEncontrado = clientesGlobal.find(c => c.cedula === cedulaBuscada);
+
+            if (clienteEncontrado) {
+                clienteSeleccionadoIdInput.value = clienteEncontrado.id;
+                textoClienteEncontrado.textContent = `✔ Cliente: ${clienteEncontrado.nombre} (Cédula: ${clienteEncontrado.cedula})`;
+                infoClienteContainer.style.display = 'block';
+                formNuevoClientePos.style.display = 'none';
+                inputBusquedaCedula.disabled = true;
+                btnBuscarCliente.disabled = true;
+            } else {
+                clienteSeleccionadoIdInput.value = '';
+                infoClienteContainer.style.display = 'none';
+                formNuevoClientePos.style.display = 'block';
+                alert('Cliente no encontrado. Puede registrarlo abajo de forma rápida o continuar sin cliente.');
+            }
+        });
+
+        btnCambiarCliente.addEventListener('click', () => {
+            clienteSeleccionadoIdInput.value = '';
+            infoClienteContainer.style.display = 'none';
+            inputBusquedaCedula.value = '';
+            inputBusquedaCedula.disabled = false;
+            btnBuscarCliente.disabled = false;
+        });
+
+        btnRegistrarRapido.addEventListener('click', () => {
+            const nombre = document.getElementById('pos-nuevo-nombre').value.trim();
+            const cedula = inputBusquedaCedula.value.trim();
+            const telefono = document.getElementById('pos-nuevo-telefono').value.trim();
+            const email = document.getElementById('pos-nuevo-email').value.trim();
+            const direccion = document.getElementById('pos-nuevo-direccion').value.trim();
+
+            if (!nombre || !cedula || !telefono || !direccion) {
+                alert('Por favor complete todos los campos para el registro del cliente.');
+                return;
+            }
+
+            const nuevoCliente = { nombre, cedula, telefono, email, direccion };
+
+            fetch('https://localhost:7137/api/clientes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevoCliente)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json().catch(() => null);
+                } else {
+                    throw new Error('Error al registrar el cliente.');
+                }
+            })
+            .then(() => fetch('https://localhost:7137/api/clientes'))
+            .then(res => res.json())
+            .then(data => {
+                clientesGlobal = data;
+                const clienteCreado = clientesGlobal.find(c => c.cedula === cedula);
+                if (clienteCreado) {
+                    clienteSeleccionadoIdInput.value = clienteCreado.id;
+                    textoClienteEncontrado.textContent = `✔ Cliente Registrado y Seleccionado: ${clienteCreado.nombre} (Cédula: ${clienteCreado.cedula})`;
+                    infoClienteContainer.style.display = 'block';
+                    formNuevoClientePos.style.display = 'none';
+                    inputBusquedaCedula.disabled = true;
+                    btnBuscarCliente.disabled = true;
+                    alert('¡Cliente registrado con éxito y asignado a la venta!');
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                alert('No se pudo registrar el cliente.');
+            });
+        });
+
+        btnAgregar.addEventListener('click', () => {
+            const prodId = parseInt(productoSeleccionadoIdInput.value);
+            const cantidad = parseInt(document.getElementById('cantidad-producto').value);
+
+            if (!prodId) {
+                alert('Por favor seleccione o escriba un producto válido de la lista.');
+                return;
+            }
+            if (cantidad <= 0) {
+                alert('La cantidad debe ser mayor a 0.');
+                return;
+            }
+
+            const productoInfo = productosGlobal.find(p => p.id === prodId);
+            if (!productoInfo) return;
+
+            if (productoInfo.stock < cantidad) {
+                alert(`Stock insuficiente. Stock disponible: ${productoInfo.stock}`);
+                return;
+            }
+
+            const itemExistente = carrito.find(item => item.idProducto === prodId);
+            if (itemExistente) {
+                if (productoInfo.stock < (itemExistente.cantidad + cantidad)) {
+                    alert('No hay suficiente stock para agregar más unidades.');
+                    return;
+                }
+                itemExistente.cantidad += cantidad;
+            } else {
+                carrito.push({
+                    idProducto: prodId,
+                    nombre: productoInfo.nombre,
+                    precioUnitario: productoInfo.precio,
+                    cantidad: cantidad
+                });
+            }
+
+            actualizarCarritoUI();
+
+            document.getElementById('cantidad-producto').value = '1';
+            inputBuscarProducto.value = '';
+            productoSeleccionadoIdInput.value = '';
+        });
+
+        function actualizarCarritoUI() {
+            const tbody = document.getElementById('carrito-body');
+            tbody.innerHTML = '';
+
+            if (carrito.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="padding: 15px; text-align: center; color: #94a3b8;">No hay productos en el carrito.</td></tr>';
+                spanTotal.textContent = '0.00';
+                spanCambio.textContent = '0.00';
+                return;
+            }
+
+            let totalGeneral = 0;
+            carrito.forEach((item, index) => {
+                const subtotal = item.precioUnitario * item.cantidad;
+                totalGeneral += subtotal;
+                tbody.innerHTML += `
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <td style="padding: 10px;">${item.nombre}</td>
+                        <td style="padding: 10px; color: #34d399;">$${item.precioUnitario}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <input type="number" class="input-cambiar-cantidad" data-index="${index}" value="${item.cantidad}" min="1" style="width: 60px; padding: 4px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #f3f4f6; text-align: center; outline: none;">
+                        </td>
+                        <td style="padding: 10px; color: #38bdf8;">$${subtotal.toFixed(2)}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button type="button" class="btn-eliminar-item" data-index="${index}" style="padding: 5px 10px; background-color: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Quitar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            spanTotal.textContent = totalGeneral.toFixed(2);
+            calcularCambio();
+
+            document.querySelectorAll('.input-cambiar-cantidad').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const index = e.target.getAttribute('data-index');
+                    const nuevaCantidad = parseInt(e.target.value);
+                    const productoInfo = productosGlobal.find(p => p.id === carrito[index].idProducto);
+
+                    if (nuevaCantidad <= 0 || isNaN(nuevaCantidad)) {
+                        alert('La cantidad debe ser al menos 1.');
+                        e.target.value = carrito[index].cantidad;
+                        return;
                     }
 
+                    if (productoInfo && productoInfo.stock < nuevaCantidad) {
+                        alert(`Stock insuficiente. Stock disponible: ${productoInfo.stock}`);
+                        e.target.value = carrito[index].cantidad;
+                        return;
+                    }
+
+                    carrito[index].cantidad = nuevaCantidad;
+                    actualizarCarritoUI();
+                });
+            });
+
+            document.querySelectorAll('.btn-eliminar-item').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.target.getAttribute('data-index');
+                    carrito.splice(index, 1);
+                    actualizarCarritoUI();
+                });
+            });
+        }
+
+        btnCancelarVenta.addEventListener('click', () => {
+            if (carrito.length === 0 && !clienteSeleccionadoIdInput.value) {
+                alert('No hay una venta en proceso para cancelar.');
+                return;
+            }
+
+            if (confirm('¿Estás seguro de que deseas cancelar el proceso de venta actual? Se perderán los datos ingresados.')) {
+                carrito = [];
+                actualizarCarritoUI();
+                
+                clienteSeleccionadoIdInput.value = '';
+                infoClienteContainer.style.display = 'none';
+                formNuevoClientePos.style.display = 'none';
+                inputBusquedaCedula.value = '';
+                inputBusquedaCedula.disabled = false;
+                btnBuscarCliente.disabled = false;
+
+                inputBuscarProducto.value = '';
+                productoSeleccionadoIdInput.value = '';
+                document.getElementById('cantidad-producto').value = '1';
+                inputMontoPago.value = '';
+                spanCambio.textContent = '0.00';
+
+                alert('Venta cancelada con éxito.');
+            }
+        });
+
+        btnProcesar.addEventListener('click', () => {
+            const clienteIdRaw = clienteSeleccionadoIdInput.value.trim();
+            const clienteId = clienteIdRaw ? parseInt(clienteIdRaw) : null;
+
+            if (carrito.length === 0) {
+                alert('El carrito de compras está vacío.');
+                return;
+            }
+
+            const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
+            const montoPagado = parseFloat(inputMontoPago.value) || 0;
+            const metodoSeleccionado = selectMetodoPago.value;
+
+            if (montoPagado < totalGeneral) {
+                alert('El monto pagado es menor al total de la venta.');
+                return;
+            }
+
+            const cambio = montoPagado - totalGeneral;
+
+            const ventaData = {
+                idCliente: clienteId,
+                metodoPago: metodoSeleccionado,
+                detalleVenta: carrito.map(item => ({
+                    idProducto: item.idProducto,
+                    cantidad: item.cantidad
+                }))
+            };
+
+            fetch('https://localhost:7137/api/ventas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(ventaData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert(`¡Venta procesada con éxito!\nMétodo: ${metodoSeleccionado}\nCambio a devolver: $${cambio.toFixed(2)}`);
+                    carrito = [];
+                    inputMontoPago.value = '';
+                    actualizarCarritoUI();
                     cargarDatosPOS();
-
-                    setTimeout(() => {
-                        const btnAgregar = document.getElementById('btn-agregar-carrito');
-                        const btnProcesar = document.getElementById('btn-procesar-venta');
-                        const btnCancelarVenta = document.getElementById('btn-cancelar-venta');
-                        const btnBuscarCliente = document.getElementById('btn-buscar-cliente');
-                        const inputBusquedaCedula = document.getElementById('busqueda-cedula');
-                        const infoClienteContainer = document.getElementById('info-cliente-container');
-                        const textoClienteEncontrado = document.getElementById('texto-cliente-encontrado');
-                        const formNuevoClientePos = document.getElementById('form-nuevo-cliente-pos');
-                        const clienteSeleccionadoIdInput = document.getElementById('cliente-seleccionado-id');
-                        const btnRegistrarRapido = document.getElementById('btn-registrar-rapido');
-                        const btnCambiarCliente = document.getElementById('btn-cambiar-cliente');
-                        
-                        const inputBuscarProducto = document.getElementById('input-buscar-producto');
-                        const productoSeleccionadoIdInput = document.getElementById('producto-seleccionado-id');
-                        const inputMontoPago = document.getElementById('input-monto-pago');
-                        const selectMetodoPago = document.getElementById('select-metodo-pago');
-                        const spanCambio = document.getElementById('span-cambio');
-                        const spanTotal = document.getElementById('span-total');
-
-                        inputBuscarProducto.addEventListener('input', () => {
-                            const valorEscrito = inputBuscarProducto.value.trim();
-                            const productoEncontrado = productosGlobal.find(p => 
-                                valorEscrito.includes(p.nombre) || p.nombre.toLowerCase() === valorEscrito.toLowerCase()
-                            );
-
-                            if (productoEncontrado) {
-                                productoSeleccionadoIdInput.value = productoEncontrado.id;
-                            } else {
-                                productoSeleccionadoIdInput.value = '';
-                            }
-                        });
-
-                        function calcularCambio() {
-                            const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
-                            const montoPagado = parseFloat(inputMontoPago.value) || 0;
-                            const cambio = montoPagado - totalGeneral;
-                            spanCambio.textContent = cambio >= 0 ? cambio.toFixed(2) : '0.00';
-                        }
-
-                        inputMontoPago.addEventListener('input', calcularCambio);
-
-                        btnBuscarCliente.addEventListener('click', () => {
-                            const cedulaBuscada = inputBusquedaCedula.value.trim();
-                            if (!cedulaBuscada) {
-                                alert('Por favor ingrese un número de cédula para buscar.');
-                                return;
-                            }
-
-                            const clienteEncontrado = clientesGlobal.find(c => c.cedula === cedulaBuscada);
-
-                            if (clienteEncontrado) {
-                                clienteSeleccionadoIdInput.value = clienteEncontrado.id;
-                                textoClienteEncontrado.textContent = `✔ Cliente: ${clienteEncontrado.nombre} (Cédula: ${clienteEncontrado.cedula})`;
-                                infoClienteContainer.style.display = 'block';
-                                formNuevoClientePos.style.display = 'none';
-                                inputBusquedaCedula.disabled = true;
-                                btnBuscarCliente.disabled = true;
-                            } else {
-                                clienteSeleccionadoIdInput.value = '';
-                                infoClienteContainer.style.display = 'none';
-                                formNuevoClientePos.style.display = 'block';
-                                alert('Cliente no encontrado. Puede registrarlo abajo de forma rápida o continuar sin cliente.');
-                            }
-                        });
-
-                        btnCambiarCliente.addEventListener('click', () => {
-                            clienteSeleccionadoIdInput.value = '';
-                            infoClienteContainer.style.display = 'none';
-                            inputBusquedaCedula.value = '';
-                            inputBusquedaCedula.disabled = false;
-                            btnBuscarCliente.disabled = false;
-                        });
-
-                        btnRegistrarRapido.addEventListener('click', () => {
-                            const nombre = document.getElementById('pos-nuevo-nombre').value.trim();
-                            const cedula = inputBusquedaCedula.value.trim();
-                            const telefono = document.getElementById('pos-nuevo-telefono').value.trim();
-                            const email = document.getElementById('pos-nuevo-email').value.trim();
-                            const direccion = document.getElementById('pos-nuevo-direccion').value.trim();
-
-                            if (!nombre || !cedula || !telefono || !direccion) {
-                                alert('Por favor complete todos los campos para el registro del cliente.');
-                                return;
-                            }
-
-                            const nuevoCliente = { nombre, cedula, telefono, email, direccion };
-
-                            fetch('https://localhost:7137/api/clientes', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(nuevoCliente)
-                            })
-                            .then(response => {
-                                if (response.ok) {
-                                    return response.json().catch(() => null);
-                                } else {
-                                    throw new Error('Error al registrar el cliente.');
-                                }
-                            })
-                            .then(() => fetch('https://localhost:7137/api/clientes'))
-                            .then(res => res.json())
-                            .then(data => {
-                                clientesGlobal = data;
-                                const clienteCreado = clientesGlobal.find(c => c.cedula === cedula);
-                                if (clienteCreado) {
-                                    clienteSeleccionadoIdInput.value = clienteCreado.id;
-                                    textoClienteEncontrado.textContent = `✔ Cliente Registrado y Seleccionado: ${clienteCreado.nombre} (Cédula: ${clienteCreado.cedula})`;
-                                    infoClienteContainer.style.display = 'block';
-                                    formNuevoClientePos.style.display = 'none';
-                                    inputBusquedaCedula.disabled = true;
-                                    btnBuscarCliente.disabled = true;
-                                    alert('¡Cliente registrado con éxito y asignado a la venta!');
-                                }
-                            })
-                            .catch(err => {
-                                console.error('Error:', err);
-                                alert('No se pudo registrar el cliente.');
-                            });
-                        });
-
-                        btnAgregar.addEventListener('click', () => {
-                            const prodId = parseInt(productoSeleccionadoIdInput.value);
-                            const cantidad = parseInt(document.getElementById('cantidad-producto').value);
-
-                            if (!prodId) {
-                                alert('Por favor seleccione o escriba un producto válido de la lista.');
-                                return;
-                            }
-                            if (cantidad <= 0) {
-                                alert('La cantidad debe ser mayor a 0.');
-                                return;
-                            }
-
-                            const productoInfo = productosGlobal.find(p => p.id === prodId);
-                            if (!productoInfo) return;
-
-                            if (productoInfo.stock < cantidad) {
-                                alert(`Stock insuficiente. Stock disponible: ${productoInfo.stock}`);
-                                return;
-                            }
-
-                            const itemExistente = carrito.find(item => item.idProducto === prodId);
-                            if (itemExistente) {
-                                if (productoInfo.stock < (itemExistente.cantidad + cantidad)) {
-                                    alert('No hay suficiente stock para agregar más unidades.');
-                                    return;
-                                }
-                                itemExistente.cantidad += cantidad;
-                            } else {
-                                carrito.push({
-                                    idProducto: prodId,
-                                    nombre: productoInfo.nombre,
-                                    precioUnitario: productoInfo.precio,
-                                    cantidad: cantidad
-                                });
-                            }
-
-                            actualizarCarritoUI();
-
-                            document.getElementById('cantidad-producto').value = '1';
-                            inputBuscarProducto.value = '';
-                            productoSeleccionadoIdInput.value = '';
-                        });
-
-                        function actualizarCarritoUI() {
-                            const tbody = document.getElementById('carrito-body');
-                            tbody.innerHTML = '';
-
-                            if (carrito.length === 0) {
-                                tbody.innerHTML = '<tr><td colspan="5" style="padding: 10px; text-align: center; color: #64748b;">No hay productos en el carrito.</td></tr>';
-                                spanTotal.textContent = '0.00';
-                                spanCambio.textContent = '0.00';
-                                return;
-                            }
-
-                            let totalGeneral = 0;
-                            carrito.forEach((item, index) => {
-                                const subtotal = item.precioUnitario * item.cantidad;
-                                totalGeneral += subtotal;
-                                tbody.innerHTML += `
-                                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                                        <td style="padding: 8px;">${item.nombre}</td>
-                                        <td style="padding: 8px;">$${item.precioUnitario}</td>
-                                        <td style="padding: 8px; text-align: center;">
-                                            <input type="number" class="input-cambiar-cantidad" data-index="${index}" value="${item.cantidad}" min="1" style="width: 60px; padding: 4px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                        </td>
-                                        <td style="padding: 8px;">$${subtotal.toFixed(2)}</td>
-                                        <td style="padding: 8px; text-align: center;">
-                                            <button type="button" class="btn-eliminar-item" data-index="${index}" style="padding: 4px 8px; background-color: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Quitar</button>
-                                        </td>
-                                    </tr>
-                                `;
-                            });
-
-                            spanTotal.textContent = totalGeneral.toFixed(2);
-                            calcularCambio();
-
-                            document.querySelectorAll('.input-cambiar-cantidad').forEach(input => {
-                                input.addEventListener('change', (e) => {
-                                    const index = e.target.getAttribute('data-index');
-                                    const nuevaCantidad = parseInt(e.target.value);
-                                    const productoInfo = productosGlobal.find(p => p.id === carrito[index].idProducto);
-
-                                    if (nuevaCantidad <= 0 || isNaN(nuevaCantidad)) {
-                                        alert('La cantidad debe ser al menos 1.');
-                                        e.target.value = carrito[index].cantidad;
-                                        return;
-                                    }
-
-                                    if (productoInfo && productoInfo.stock < nuevaCantidad) {
-                                        alert(`Stock insuficiente. Stock disponible: ${productoInfo.stock}`);
-                                        e.target.value = carrito[index].cantidad;
-                                        return;
-                                    }
-
-                                    carrito[index].cantidad = nuevaCantidad;
-                                    actualizarCarritoUI();
-                                });
-                            });
-
-                            document.querySelectorAll('.btn-eliminar-item').forEach(btn => {
-                                btn.addEventListener('click', (e) => {
-                                    const index = e.target.getAttribute('data-index');
-                                    carrito.splice(index, 1);
-                                    actualizarCarritoUI();
-                                });
-                            });
-                        }
-
-                        btnCancelarVenta.addEventListener('click', () => {
-                            if (carrito.length === 0 && !clienteSeleccionadoIdInput.value) {
-                                alert('No hay una venta en proceso para cancelar.');
-                                return;
-                            }
-
-                            if (confirm('¿Estás seguro de que deseas cancelar el proceso de venta actual? Se perderán los datos ingresados.')) {
-                                carrito = [];
-                                actualizarCarritoUI();
-                                
-                                clienteSeleccionadoIdInput.value = '';
-                                infoClienteContainer.style.display = 'none';
-                                formNuevoClientePos.style.display = 'none';
-                                inputBusquedaCedula.value = '';
-                                inputBusquedaCedula.disabled = false;
-                                btnBuscarCliente.disabled = false;
-
-                                inputBuscarProducto.value = '';
-                                productoSeleccionadoIdInput.value = '';
-                                document.getElementById('cantidad-producto').value = '1';
-                                inputMontoPago.value = '';
-                                spanCambio.textContent = '0.00';
-
-                                alert('Venta cancelada con éxito.');
-                            }
-                        });
-
-                        btnProcesar.addEventListener('click', () => {
-                            const clienteIdRaw = clienteSeleccionadoIdInput.value.trim();
-                            const clienteId = clienteIdRaw ? parseInt(clienteIdRaw) : null;
-
-                            if (carrito.length === 0) {
-                                alert('El carrito de compras está vacío.');
-                                return;
-                            }
-
-                            const totalGeneral = carrito.reduce((acc, item) => acc + (item.precioUnitario * item.cantidad), 0);
-                            const montoPagado = parseFloat(inputMontoPago.value) || 0;
-                            const metodoSeleccionado = selectMetodoPago.value;
-
-                            if (montoPagado < totalGeneral) {
-                                alert('El monto pagado es menor al total de la venta.');
-                                return;
-                            }
-
-                            const cambio = montoPagado - totalGeneral;
-
-                            const ventaData = {
-                                idCliente: clienteId,
-                                metodoPago: metodoSeleccionado,
-                                detalleVenta: carrito.map(item => ({
-                                    idProducto: item.idProducto,
-                                    cantidad: item.cantidad
-                                }))
-                            };
-
-                            fetch('https://localhost:7137/api/ventas', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(ventaData)
-                            })
-                            .then(response => {
-                                if (response.ok) {
-                                    alert(`¡Venta procesada con éxito!\nMétodo: ${metodoSeleccionado}\nCambio a devolver: $${cambio.toFixed(2)}`);
-                                    carrito = [];
-                                    inputMontoPago.value = '';
-                                    actualizarCarritoUI();
-                                    cargarDatosPOS();
-                                    clienteSeleccionadoIdInput.value = '';
-                                    infoClienteContainer.style.display = 'none';
-                                    formNuevoClientePos.style.display = 'none';
-                                    inputBusquedaCedula.value = '';
-                                    inputBusquedaCedula.disabled = false;
-                                    btnBuscarCliente.disabled = false;
-                                } else {
-                                    response.text().then(err => alert('Error al procesar la venta: ' + err));
-                                }
-                            })
-                            .catch(error => console.error('Error en POST Venta:', error));
-                        });
-                    }, 100);
-                    break;
+                    clienteSeleccionadoIdInput.value = '';
+                    infoClienteContainer.style.display = 'none';
+                    formNuevoClientePos.style.display = 'none';
+                    inputBusquedaCedula.value = '';
+                    inputBusquedaCedula.disabled = false;
+                    btnBuscarCliente.disabled = false;
+                } else {
+                    response.text().then(err => alert('Error al procesar la venta: ' + err));
+                }
+            })
+            .catch(error => console.error('Error en POST Venta:', error));
+        });
+    }, 100);
+    break;
 
              case 'ventas-dia':
-                    sectionTitle.textContent = 'Ventas del Día';
-                    contentBody.innerHTML = `
-                        <div class="card" style="margin-bottom: 20px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <h3>Total ventas del dia.</h3>
-                                <div style="background-color: #f0fdf4; padding: 10px 15px; border-radius: 6px; border: 1px solid #bbf7d0;">
-                                    <span style="font-weight: bold; color: #166534;">Total Vendido Hoy: $<span id="total-ventas-dia">0.00</span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <h3>Detalle de Facturas (Haga clic en "Ver Detalle" para desplegar)</h3>
-                            <div id="contenedor-tabla-ventas">
-                                <p style="padding: 10px; color: #64748b;">Cargando ventas del día...</p>
-                            </div>
-                        </div>
-                    `;
+    sectionTitle.textContent = 'Ventas del Día';
+    contentBody.innerHTML = `
+        <div class="card" style="margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #f8fafc; margin: 0;">Total ventas del dia.</h3>
+                <div style="background-color: #0f172a; padding: 12px 18px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2);">
+                    <span style="font-weight: 600; color: #94a3b8; font-size: 0.9rem;">Total Vendido Hoy: <span id="total-ventas-dia" style="color: #38bdf8; font-size: 1.1rem; font-weight: bold;">0.00</span></span>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3 style="color: #f8fafc; margin-bottom: 10px;">Detalle de Facturas (Haga clic en "Ver Detalle" para desplegar)</h3>
+            <div id="contenedor-tabla-ventas">
+                <p style="padding: 15px; color: #94a3b8; text-align: center;">Cargando ventas del día...</p>
+            </div>
+        </div>
+    `;
 
-                    function cargarVentasDelDia() {
-                        const fechaLocal = new Date().toLocaleDateString('en-CA');
+    function cargarVentasDelDia() {
+        const fechaLocal = new Date().toLocaleDateString('en-CA');
 
-                        fetch(`https://localhost:7137/api/Ventas/PorFecha?fecha=${fechaLocal}`)
-                            .then(res => res.json())
-                            .then(ventas => {
-                                const contenedor = document.getElementById('contenedor-tabla-ventas');
-                                const spanTotalDia = document.getElementById('total-ventas-dia');
+        fetch(`https://localhost:7137/api/Ventas/PorFecha?fecha=${fechaLocal}`)
+            .then(res => res.json())
+            .then(ventas => {
+                const contenedor = document.getElementById('contenedor-tabla-ventas');
+                const spanTotalDia = document.getElementById('total-ventas-dia');
 
-                                if (!ventas || ventas.length === 0) {
-                                    contenedor.innerHTML = '<p style="padding: 10px; text-align: center; color: #64748b;">No se han registrado ventas el día de hoy.</p>';
-                                    spanTotalDia.textContent = '0.00';
-                                    return;
-                                }
+                if (!ventas || ventas.length === 0) {
+                    contenedor.innerHTML = '<p style="padding: 15px; text-align: center; color: #94a3b8;">No se han registrado ventas el día de hoy.</p>';
+                    spanTotalDia.textContent = '0.00';
+                    return;
+                }
 
-                                let tablaHTML = `
-                                    <table style="width:100%; border-collapse: collapse; margin-top:15px;">
-                                        <thead>
-                                            <tr style="background-color:#1e293b; color: white; text-align: left;">
-                                                <th style="padding: 10px;">ID Venta</th>
-                                                <th style="padding: 10px;">Hora</th>
-                                                <th style="padding: 10px;">Cliente</th>
-                                                <th style="padding: 10px;">Método Pago</th>
-                                                <th style="padding: 10px; text-align: right;">Total</th>
-                                                <th style="padding: 10px; text-align: center;">Acción</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                `;
+                let tablaHTML = `
+                    <div style="overflow-x: auto;">
+                        <table style="width:100%; border-collapse: collapse; margin-top:5px; text-align: left; color: #f3f4f6;">
+                            <thead>
+                                <tr style="background-color:#020617; color: #38bdf8; border-bottom: 2px solid rgba(56, 189, 248, 0.2);">
+                                    <th style="padding: 12px;">ID Venta</th>
+                                    <th style="padding: 12px;">Hora</th>
+                                    <th style="padding: 12px;">Cliente</th>
+                                    <th style="padding: 12px;">Método Pago</th>
+                                    <th style="padding: 12px; text-align: right;">Total</th>
+                                    <th style="padding: 12px; text-align: center;">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
 
-                                let acumuladoTotal = 0;
+                let acumuladoTotal = 0;
 
-                                ventas.forEach(venta => {
-                                    const hora = venta.fecha ? venta.fecha.split('T')[1].substring(0, 5) : 'N/A';
-                                    const nombreCliente = venta.idClienteNavigation ? venta.idClienteNavigation.nombre : 'Cliente General';
-                                    const metodoPagoVenta = venta.metodoPago || 'Efectivo';
-                                    
-                                    let totalVenta = 0;
-                                    let listaProductosHTML = '<ul style="margin: 0; padding-left: 20px;">';
-                                    
-                                    if (venta.detalleVenta && venta.detalleVenta.length > 0) {
-                                        venta.detalleVenta.forEach(det => {
-                                            const subtotal = det.cantidad * det.precioUnitario;
-                                            totalVenta += subtotal;
-                                            const prodNombre = det.idProductoNavigation ? det.idProductoNavigation.nombre : `ID: ${det.idProducto}`;
-                                            listaProductosHTML += `<li style="margin-bottom: 4px;"><strong>${prodNombre}</strong> - Cantidad: ${det.cantidad} - Subtotal: $${subtotal.toFixed(2)}</li>`;
-                                        });
-                                    }
-                                    listaProductosHTML += '</ul>';
-
-                                    acumuladoTotal += totalVenta;
-
-                                    tablaHTML += `
-                                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 10px;">#${venta.id}</td>
-                                            <td style="padding: 10px;">${hora}</td>
-                                            <td style="padding: 10px;">${nombreCliente}</td>
-                                            <td style="padding: 10px;"><span style="background: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 500;">${metodoPagoVenta}</span></td>
-                                            <td style="padding: 10px; text-align: right; font-weight: bold;">$${totalVenta.toFixed(2)}</td>
-                                            <td style="padding: 10px; text-align: center;">
-                                                <button class="btn-desplegar" data-id="${venta.id}" style="background-color: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Ver Detalle ▼</button>
-                                            </td>
-                                        </tr>
-                                        <tr id="detalle-${venta.id}" style="display: none; background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-                                            <td colspan="6" style="padding: 15px 20px;">
-                                                <div style="font-weight: bold; margin-bottom: 6px; color: #1e293b;">Productos de la Factura #${venta.id}:</div>
-                                                ${listaProductosHTML}
-                                            </td>
-                                        </tr>
-                                    `;
-                                });
-
-                                tablaHTML += `</tbody></table>`;
-                                contenedor.innerHTML = tablaHTML;
-                                spanTotalDia.textContent = acumuladoTotal.toFixed(2);
-
-                                document.querySelectorAll('.btn-desplegar').forEach(btn => {
-                                    btn.addEventListener('click', (e) => {
-                                        const ventaId = e.target.getAttribute('data-id');
-                                        const filaDetalle = document.getElementById(`detalle-${ventaId}`);
-
-                                        if (filaDetalle.style.display === 'none') {
-                                            filaDetalle.style.display = 'table-row';
-                                            e.target.textContent = 'Ocultar ▲';
-                                            e.target.style.backgroundColor = '#475569';
-                                        } else {
-                                            filaDetalle.style.display = 'none';
-                                            e.target.textContent = 'Ver Detalle ▼';
-                                            e.target.style.backgroundColor = '#2563eb';
-                                        }
-                                    });
-                                });
-                            })
-                            .catch(err => {
-                                console.error('Error al cargar ventas:', err);
-                                document.getElementById('contenedor-tabla-ventas').innerHTML = '<p style="padding: 10px; color: red; text-align: center;">Error al cargar el reporte de ventas.</p>';
-                            });
-                    }
-
-                    cargarVentasDelDia();
-                    break;
-
-                case 'producto-mas-vendido':
-                    sectionTitle.textContent = 'Producto Más Vendido';
-                    contentBody.innerHTML = `
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                            <div class="card">
-                                <h3>🏆 Producto con mayor demanda</h3>
-                                <div id="contenedor-producto-general" style="margin-top: 15px;">
-                                    <p style="color: #64748b;">Cargando general...</p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <h3>📅 Más Vendido del Día</h3>
-                                <div style="margin-top: 10px; margin-bottom: 15px; display: flex; gap: 8px; align-items: center;">
-                                    <input type="date" id="filtro-fecha-estrella" style="padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                                    <button type="button" id="btn-consultar-dia" style="padding: 6px 12px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Consultar</button>
-                                </div>
-                                <div id="contenedor-producto-diario">
-                                    <p style="color: #64748b;">Cargando diario...</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    fetch('https://localhost:7137/api/Ventas/ProductoMasVendido')
-                        .then(res => res.json())
-                        .then(data => {
-                            const contenedor = document.getElementById('contenedor-producto-general');
-                            const prod = data.producto;
-                            if (!prod) {
-                                contenedor.innerHTML = '<p style="color: #64748b;">Sin registros.</p>';
-                                return;
-                            }
-                            contenedor.innerHTML = `
-                                <div style="background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                    <h4 style="margin: 0 0 5px 0; color: #1e293b; font-size: 1.1rem;">${prod.nombre}</h4>
-                                    <p style="margin: 0 0 8px 0; color: #64748b; font-size: 0.85rem;">Categoría: ${prod.categoria || 'General'}</p>
-                                    <p style="margin: 0; font-weight: bold; color: #16a34a;">Total histórico: ${data.totalUnidadesVendidas} unidades</p>
-                                </div>
-                            `;
-                        })
-                        .catch(() => {
-                            document.getElementById('contenedor-producto-general').innerHTML = '<p style="color: red;">Sin datos suficientes.</p>';
+                ventas.forEach(venta => {
+                    const hora = venta.fecha ? venta.fecha.split('T')[1].substring(0, 5) : 'N/A';
+                    const nombreCliente = venta.idClienteNavigation ? venta.idClienteNavigation.nombre : 'Cliente General';
+                    const metodoPagoVenta = venta.metodoPago || 'Efectivo';
+                    
+                    let totalVenta = 0;
+                    let listaProductosHTML = '<ul style="margin: 0; padding-left: 20px; color: #94a3b8;">';
+                    
+                    if (venta.detalleVenta && venta.detalleVenta.length > 0) {
+                        venta.detalleVenta.forEach(det => {
+                            const subtotal = det.cantidad * det.precioUnitario;
+                            totalVenta += subtotal;
+                            const prodNombre = det.idProductoNavigation ? det.idProductoNavigation.nombre : `ID: ${det.idProducto}`;
+                            listaProductosHTML += `<li style="margin-bottom: 4px;"><strong style="color: #f3f4f6;">${prodNombre}</strong> - Cantidad: ${det.cantidad} | Subtotal: <span style="color: #38bdf8;">$${subtotal.toFixed(2)}</span></li>`;
                         });
+                    }
+                    listaProductosHTML += '</ul>';
 
-                    function cargarEstrellaDiario(fechaStr = '') {
-                        let url = 'https://localhost:7137/api/Ventas/ProductoMasVendidoDiario';
-                        if (fechaStr) {
-                            url += `?fecha=${fechaStr}`;
+                    acumuladoTotal += totalVenta;
+
+                    tablaHTML += `
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;">
+                            <td style="padding: 12px; color: #94a3b8;">#${venta.id}</td>
+                            <td style="padding: 12px;">${hora}</td>
+                            <td style="padding: 12px; font-weight: 500;">${nombreCliente}</td>
+                            <td style="padding: 12px;"><span style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(56, 189, 248, 0.2);">${metodoPagoVenta}</span></td>
+                            <td style="padding: 12px; text-align: right; font-weight: bold; color: #34d399;">$${totalVenta.toFixed(2)}</td>
+                            <td style="padding: 12px; text-align: center;">
+                                <button class="btn-desplegar" data-id="${venta.id}" style="background-color: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 500;">Ver Detalle ▼</button>
+                            </td>
+                        </tr>
+                        <tr id="detalle-${venta.id}" style="display: none; background-color: #0f172a; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                            <td colspan="6" style="padding: 15px 20px;">
+                                <div style="font-weight: 600; margin-bottom: 8px; color: #38bdf8;">Productos de la Factura #${venta.id}:</div>
+                                ${listaProductosHTML}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tablaHTML += `</tbody></table></div>`;
+                contenedor.innerHTML = tablaHTML;
+                spanTotalDia.textContent = acumuladoTotal.toFixed(2);
+
+                document.querySelectorAll('.btn-desplegar').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const ventaId = e.target.getAttribute('data-id');
+                        const filaDetalle = document.getElementById(`detalle-${ventaId}`);
+
+                        if (filaDetalle.style.display === 'none') {
+                            filaDetalle.style.display = 'table-row';
+                            e.target.textContent = 'Ocultar ▲';
+                            e.target.style.backgroundColor = '#475569';
+                        } else {
+                            filaDetalle.style.display = 'none';
+                            e.target.textContent = 'Ver Detalle ▼';
+                            e.target.style.backgroundColor = '#2563eb';
                         }
+                    });
+                });
+            })
+            .catch(err => {
+                console.error('Error al cargar ventas:', err);
+                document.getElementById('contenedor-tabla-ventas').innerHTML = '<p style="padding: 15px; color: #f87171; text-align: center;">Error al cargar el reporte de ventas.</p>';
+            });
+    }
 
-                        fetch(url)
-                            .then(res => {
-                                if (!res.ok) throw new Error('Sin ventas');
-                                return res.json();
-                            })
-                            .then(data => {
-                                const contenedor = document.getElementById('contenedor-producto-diario');
-                                const prod = data.producto;
-                                contenedor.innerHTML = `
-                                    <div style="background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                        <h4 style="margin: 0 0 5px 0; color: #1e293b; font-size: 1.1rem;">${prod.nombre}</h4>
-                                        <p style="margin: 0 0 8px 0; color: #64748b; font-size: 0.85rem;">Fecha consultada: ${data.fechaConsulta}</p>
-                                        <p style="margin: 0; font-weight: bold; color: #2563eb;">Vendidos hoy: ${data.totalUnidadesVendidas} unidades</p>
-                                    </div>
-                                `;
-                            })
-                            .catch(() => {
-                                document.getElementById('contenedor-producto-diario').innerHTML = '<p style="color: #d97706; font-size: 0.9rem;">No hay ventas registradas en esta fecha.</p>';
-                            });
-                    }
+    cargarVentasDelDia();
+    break;
 
-                    setTimeout(() => {
-                        const inputFecha = document.getElementById('filtro-fecha-estrella');
-                        const fechaLocal = new Date().toLocaleDateString('en-CA');
-                        inputFecha.value = fechaLocal;
+               case 'producto-mas-vendido':
+    sectionTitle.textContent = 'Producto Más Vendido';
+    contentBody.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div class="card">
+                <h3 style="color: #f8fafc; margin-bottom: 10px;">🏆 Producto con mayor demanda</h3>
+                <div id="contenedor-producto-general" style="margin-top: 15px;">
+                    <p style="color: #94a3b8; text-align: center; padding: 15px;">Cargando general...</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="color: #f8fafc; margin-bottom: 10px;">📅 Más Vendido del Día</h3>
+                <div style="margin-top: 10px; margin-bottom: 15px; display: flex; gap: 8px; align-items: center;">
+                    <input type="date" id="filtro-fecha-estrella" style="padding: 9px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none; flex: 1;">
+                    <button type="button" id="btn-consultar-dia" style="padding: 10px 14px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Consultar</button>
+                </div>
+                <div id="contenedor-producto-diario">
+                    <p style="color: #94a3b8; text-align: center; padding: 15px;">Cargando diario...</p>
+                </div>
+            </div>
+        </div>
+    `;
 
-                        cargarEstrellaDiario(fechaLocal);
+    fetch('https://localhost:7137/api/Ventas/ProductoMasVendido')
+        .then(res => res.json())
+        .then(data => {
+            const contenedor = document.getElementById('contenedor-producto-general');
+            const prod = data.producto;
+            if (!prod) {
+                contenedor.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 15px;">Sin registros.</p>';
+                return;
+            }
+            contenedor.innerHTML = `
+                <div style="background: #0f172a; padding: 18px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <h4 style="margin: 0 0 6px 0; color: #f8fafc; font-size: 1.1rem;">${prod.nombre}</h4>
+                    <p style="margin: 0 0 10px 0; color: #94a3b8; font-size: 0.9rem;">Categoría: ${prod.categoria || 'General'}</p>
+                    <p style="margin: 0; font-weight: bold; color: #34d399; font-size: 1rem;">Total histórico: ${data.totalUnidadesVendidas} unidades</p>
+                </div>
+            `;
+        })
+        .catch(() => {
+            document.getElementById('contenedor-producto-general').innerHTML = '<p style="color: #f87171; text-align: center; padding: 15px;">Sin datos suficientes.</p>';
+        });
 
-                        document.getElementById('btn-consultar-dia').addEventListener('click', () => {
-                            cargarEstrellaDiario(inputFecha.value);
-                        });
-                    }, 100);
-                    break;
+    function cargarEstrellaDiario(fechaStr = '') {
+        let url = 'https://localhost:7137/api/Ventas/ProductoMasVendidoDiario';
+        if (fechaStr) {
+            url += `?fecha=${fechaStr}`;
+        }
 
-                default:
-                    sectionTitle.textContent = 'Dashboard';
-                    break;
+        fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error('Sin ventas');
+                return res.json();
+            })
+            .then(data => {
+                const contenedor = document.getElementById('contenedor-producto-diario');
+                const prod = data.producto;
+                contenedor.innerHTML = `
+                    <div style="background: #0f172a; padding: 18px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                        <h4 style="margin: 0 0 6px 0; color: #f8fafc; font-size: 1.1rem;">${prod.nombre}</h4>
+                        <p style="margin: 0 0 10px 0; color: #94a3b8; font-size: 0.9rem;">Fecha consultada: ${data.fechaConsulta}</p>
+                        <p style="margin: 0; font-weight: bold; color: #38bdf8; font-size: 1rem;">Vendidos hoy: ${data.totalUnidadesVendidas} unidades</p>
+                    </div>
+                `;
+            })
+            .catch(() => {
+                document.getElementById('contenedor-producto-diario').innerHTML = '<p style="color: #fbbf24; font-size: 0.9rem; text-align: center; padding: 15px;">No hay ventas registradas en esta fecha.</p>';
+            });
+    }
+
+    setTimeout(() => {
+        const inputFecha = document.getElementById('filtro-fecha-estrella');
+        const fechaLocal = new Date().toLocaleDateString('en-CA');
+        inputFecha.value = fechaLocal;
+
+        cargarEstrellaDiario(fechaLocal);
+
+        document.getElementById('btn-consultar-dia').addEventListener('click', () => {
+            cargarEstrellaDiario(inputFecha.value);
+        });
+    }, 100);
+    break;
+
+default:
+    sectionTitle.textContent = 'Dashboard';
+    break;
             }
         });
     }); 
