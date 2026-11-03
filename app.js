@@ -222,7 +222,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="text" id="nuevo-prod-nombre" placeholder="Nombre del producto" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
                 <input type="number" id="nuevo-prod-precio" placeholder="Precio" step="0.01" required style="padding: 10px 12px; flex: 1; min-width: 120px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
                 <input type="number" id="nuevo-prod-stock" placeholder="Stock / Cantidad inicial" min="0" required style="padding: 10px 12px; flex: 1; min-width: 120px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
-                <input type="text" id="nuevo-prod-categoria" placeholder="Categoría" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                
+                <!-- Input de texto con datalist para escribir o autocompletar la categoría -->
+                <div style="flex: 1; min-width: 150px; position: relative;">
+                    <input type="text" id="nuevo-prod-categoria" placeholder="Escribe la categoría..." list="lista-categorias-sugeridas" required style="width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none; box-sizing: border-box;">
+                    <datalist id="lista-categorias-sugeridas"></datalist>
+                </div>
+
                 <input type="text" id="nuevo-prod-descripcion" placeholder="Descripción (Opcional)" style="padding: 10px 12px; flex: 1; min-width: 200px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
                 <button type="submit" style="padding: 10px 18px; background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Guardar Producto</button>
             </form>
@@ -237,7 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="text" id="edit-nombre" placeholder="Nombre del producto" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
                 <input type="number" id="edit-precio" placeholder="Precio" step="0.01" required style="padding: 10px 12px; flex: 1; min-width: 120px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
                 <input type="number" id="edit-stock" placeholder="Stock a agregar" required style="padding: 10px 12px; flex: 1; min-width: 100px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
-                <input type="text" id="edit-categoria" placeholder="Categoría" required style="padding: 10px 12px; flex: 1; min-width: 150px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
+                
+                <!-- Input de texto con datalist para edición -->
+                <div style="flex: 1; min-width: 150px; position: relative;">
+                    <input type="text" id="edit-categoria" placeholder="Escribe la categoría..." list="lista-categorias-sugeridas" required style="width: 100%; padding: 10px 12px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none; box-sizing: border-box;">
+                </div>
+
                 <input type="text" id="edit-descripcion" placeholder="Descripción del producto" style="padding: 10px 12px; flex: 1; min-width: 200px; background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f3f4f6; outline: none;">
                 <button type="submit" style="padding: 10px 18px; background: linear-gradient(135deg, #16a34a, #22c55e); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">Actualizar</button>
                 <button type="button" id="btn-cancelar-edit" style="padding: 10px 18px; background-color: #475569; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cancelar</button>
@@ -252,6 +263,26 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
     `;
+
+    let categoriasGlobal = [];
+    function cargarCategoriasDatalist() {
+        fetch('https://localhost:7137/api/categorias')
+            .then(res => res.json())
+            .then(categorias => {
+                categoriasGlobal = categorias;
+                const datalist = document.getElementById('lista-categorias-sugeridas');
+                if (datalist) {
+                    datalist.innerHTML = '';
+                    categorias.forEach(cat => {
+                        const nombreCat = cat.nombreCategoria || cat.nombre || '';
+                        if (nombreCat) {
+                            datalist.innerHTML += `<option value="${nombreCat}">`;
+                        }
+                    });
+                }
+            })
+            .catch(err => console.error('Error al cargar categorías:', err));
+    }
 
     function cargarInventario() {
         fetch('https://localhost:7137/api/productos')
@@ -282,16 +313,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 productos.forEach(prod => {
                     const estiloStock = prod.stock <= 10 ? 'color: #f87171; font-weight: bold;' : 'color: #f3f4f6;';
+                    const nombreCategoria = prod.idCategoriaNavigation ? (prod.idCategoriaNavigation.nombreCategoria || prod.idCategoriaNavigation.nombre) : 'General';
+
                     tablaHTML += `
                         <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;">
                             <td style="padding: 12px; color: #94a3b8;">${prod.id}</td>
                             <td style="padding: 12px; font-weight: 500;">${prod.nombre}</td>
                             <td style="padding: 12px; color: #34d399;">$${prod.precio}</td>
                             <td style="padding: 12px; ${estiloStock}">${prod.stock}</td>
-                            <td style="padding: 12px; color: #94a3b8;">${prod.categoria || 'General'}</td>
+                            <td style="padding: 12px; color: #94a3b8;">${nombreCategoria}</td>
                             <td style="padding: 12px; text-align: center;">
                                 <div style="display: flex; gap: 6px; justify-content: center;">
-                                    <button class="btn-editar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-stock="${prod.stock}" data-categoria="${prod.categoria || ''}" data-descripcion="${prod.descripcion || ''}" style="padding: 6px 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Editar</button>
+                                    <button class="btn-editar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-stock="${prod.stock}" data-catanombre="${nombreCategoria !== 'General' ? nombreCategoria : ''}" data-descripcion="${prod.descripcion || ''}" style="padding: 6px 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Editar</button>
                                     <button class="btn-eliminar-producto" data-id="${prod.id}" style="padding: 6px 12px; background-color: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Eliminar</button>
                                 </div>
                             </td>
@@ -309,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const nombre = e.target.getAttribute('data-nombre');
                         const precio = e.target.getAttribute('data-precio');
                         const stockactual = e.target.getAttribute('data-stock');
-                        const categoria = e.target.getAttribute('data-categoria');
+                        const catNombre = e.target.getAttribute('data-catanombre');
                         const descripcion = e.target.getAttribute('data-descripcion');
 
                         document.getElementById('card-formulario-producto').style.display = 'block';
@@ -318,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('edit-nombre').value = nombre;
                         document.getElementById('edit-precio').value = precio;
                         document.getElementById('edit-stock').value = '';
-                        document.getElementById('edit-categoria').value = categoria;
+                        document.getElementById('edit-categoria').value = catNombre;
                         document.getElementById('edit-descripcion').value = descripcion;
 
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -337,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             .then(response => {
                                 if (response.ok) {
                                     alert('¡Producto eliminado con éxito!');
-                                    cargarInventario(); // Refrescar la tabla
+                                    cargarInventario();
                                 } else {
                                     alert('No se pudo eliminar el producto (puede estar asociado a ventas registradas).');
                                 }
@@ -353,20 +386,54 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    cargarCategoriasDatalist();
     cargarInventario();
 
     setTimeout(() => {
+        // Función auxiliar para obtener el ID de la categoría por texto (o crearla automáticamente si no existe)
+        async function obtenerOidCrearCategoria(nombreCatTexto) {
+            if (!nombreCatTexto) return null;
+            const catEncontrada = categoriasGlobal.find(c => {
+                const n = c.nombreCategoria || c.nombre || '';
+                return n.toLowerCase() === nombreCatTexto.toLowerCase();
+            });
+
+            if (catEncontrada) {
+                return catEncontrada.id;
+            } else {
+                try {
+                    const response = await fetch('https://localhost:7137/api/categorias', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombreCategoria: nombreCatTexto })
+                    });
+                    if (response.ok) {
+                        const nuevaCat = await response.json();
+                        categoriasGlobal.push(nuevaCat);
+                        return nuevaCat.id;
+                    }
+                } catch (e) {
+                    console.error('Error al crear categoría automáticamente:', e);
+                }
+            }
+            return null;
+        }
+
         // Lógica para Crear Nuevo Producto
         const formCrearProd = document.getElementById('form-crear-producto-inventario');
         if (formCrearProd) {
-            formCrearProd.addEventListener('submit', (e) => {
+            formCrearProd.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const textoCat = document.getElementById('nuevo-prod-categoria').value.trim();
+                const idCat = await obtenerOidCrearCategoria(textoCat);
+
                 const nuevoProductoData = {
                     nombre: document.getElementById('nuevo-prod-nombre').value.trim(),
                     precio: parseFloat(document.getElementById('nuevo-prod-precio').value),
                     stock: parseInt(document.getElementById('nuevo-prod-stock').value),
-                    categoria: document.getElementById('nuevo-prod-categoria').value.trim(),
-                    descripcion: document.getElementById('nuevo-prod-descripcion').value.trim()
+                    idCategoria: idCat,
+                    descripcion: document.getElementById('nuevo-prod-descripcion').value.trim(),
+                    activo: true
                 };
 
                 fetch('https://localhost:7137/api/productos', {
@@ -378,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (response.ok) {
                         alert('¡Producto creado y registrado con éxito en el inventario!');
                         formCrearProd.reset();
+                        cargarCategoriasDatalist();
                         cargarInventario();
                     } else {
                         response.text().then(err => alert('Error al crear el producto: ' + err));
@@ -399,21 +467,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (formEditar) {
-            formEditar.addEventListener('submit', (e) => {
+            formEditar.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('edit-id').value;
                 const stockOriginal = parseInt(document.getElementById('edit-stock-original').value) || 0;
                 const cantidadIngresada = parseInt(document.getElementById('edit-stock').value) || 0;
-
                 const stockFinal = stockOriginal + cantidadIngresada;
+
+                const textoCat = document.getElementById('edit-categoria').value.trim();
+                const idCat = await obtenerOidCrearCategoria(textoCat);
 
                 const productoActualizado = {
                     id: parseInt(id),
                     nombre: document.getElementById('edit-nombre').value,
                     precio: parseFloat(document.getElementById('edit-precio').value),
                     stock: stockFinal,
-                    categoria: document.getElementById('edit-categoria').value,
-                    descripcion: document.getElementById('edit-descripcion').value
+                    idCategoria: idCat,
+                    descripcion: document.getElementById('edit-descripcion').value,
+                    activo: true
                 };
 
                 fetch(`https://localhost:7137/api/productos/${id}`, {
@@ -426,6 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert(`Producto actualizado con éxito (Anterior: ${stockOriginal} + Agregados: ${cantidadIngresada} = Total: ${stockFinal})`);
                         document.getElementById('card-formulario-producto').style.display = 'none';
                         formEditar.reset();
+                        cargarCategoriasDatalist();
                         cargarInventario();
                     } else {
                         response.text().then(err => alert('Error al actualizar producto: ' + err));
