@@ -119,39 +119,39 @@
     <script>
         // Lógica de Inicio de Sesión
         const formLogin = document.getElementById('form-login');
-        const errorMsg = document.getElementById('error-msg');
+const errorMsg = document.getElementById('error-msg');
 
-        formLogin.addEventListener('submit', (e) => {
-            e.preventDefault();
-            errorMsg.textContent = '';
+formLogin.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errorMsg.textContent = '';
+    
+    const credentials = {
+        email: document.getElementById('login-email').value,
+        contrasena: document.getElementById('login-contrasena').value
+    };
+
+    fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+    })
+    .then(async res => {
+        if (res.ok) {
+            const data = await res.json();
             
-            const credentials = {
-                email: document.getElementById('login-email').value,
-                contrasena: document.getElementById('login-contrasena').value
-            };
-
-            fetch('https://localhost:7137/api/Usuarios/Login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(credentials)
-            })
-            .then(async res => {
-                if (res.ok) {
-                    const data = await res.json();
-                    
-                    // Guardar la sesión y redirigir al panel principal
-                    localStorage.setItem('usuarioLogueado', JSON.stringify(data.usuario));
-                    window.location.href = 'index.html';
-                } else {
-                    const errorText = await res.text();
-                    errorMsg.textContent = errorText || 'Correo o contraseña incorrectos.';
-                }
-            })
-            .catch(err => {
-                console.error('Error:', err);
-                errorMsg.textContent = 'Error de conexión con el servidor.';
-            });
-        });
+            // Guardar la sesión y redirigir al panel principal
+            localStorage.setItem('usuarioLogueado', JSON.stringify(data.usuario));
+            window.location.href = 'index.html';
+        } else {
+            const errorText = await res.text();
+            errorMsg.textContent = errorText || 'Correo o contraseña incorrectos.';
+        }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        errorMsg.textContent = 'Error de conexión con el servidor.';
+    });
+});
     </script>
   
     </script>
