@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const passwordIngresada = document.getElementById('input-pass-bloqueo').value;
 
             // Validar credenciales contra la API de login
-            fetch('https://localhost:7137/api/Usuarios/Login', {
+            fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: usuarioActual.email, contrasena: passwordIngresada })
