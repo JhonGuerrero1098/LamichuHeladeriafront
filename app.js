@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     idRol: idRol
                                 };
 
-                                fetch('https://localhost:7137/api/Usuarios/Registro', {
+                                fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Registro', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(nuevoUsuarioData)
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let categoriasGlobal = [];
     function cargarCategoriasDatalist() {
-        fetch('https://localhost:7137/api/categorias')
+        fetch('https://backendlamichuheladeria.onrender.com/api/categorias')
             .then(res => res.json())
             .then(categorias => {
                 categoriasGlobal = categorias;
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function cargarInventario() {
-        fetch('https://localhost:7137/api/productos')
+        fetch('https://backendlamichuheladeria.onrender.com/api/productos')
             .then(response => response.json())
             .then(productos => {
                 const contenedor = document.getElementById('contenedor-tabla');
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const idProducto = e.target.getAttribute('data-id');
 
                         if (confirm('¿Estás seguro de que deseas eliminar este producto del inventario?')) {
-                            fetch(`https://localhost:7137/api/productos/${idProducto}`, {
+                            fetch(`https://backendlamichuheladeria.onrender.com/api/productos/${idProducto}`, {
                                 method: 'DELETE'
                             })
                             .then(response => {
@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return catEncontrada.id;
             } else {
                 try {
-                    const response = await fetch('https://localhost:7137/api/categorias', {
+                    const response = await fetch('https://backendlamichuheladeria.onrender.com/api/categorias', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ nombreCategoria: nombreCatTexto })
@@ -436,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     activo: true
                 };
 
-                fetch('https://localhost:7137/api/productos', {
+                fetch('https://backendlamichuheladeria.onrender.com/api/productos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(nuevoProductoData)
@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     activo: true
                 };
 
-                fetch(`https://localhost:7137/api/productos/${id}`, {
+                fetch(`https://backendlamichuheladeria.onrender.com/api/productos/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(productoActualizado)
@@ -557,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let idsClientesEliminados = JSON.parse(localStorage.getItem('clientesEliminadosUI') || '[]');
 
     function cargarClientes() {
-        fetch('https://localhost:7137/api/clientes')
+        fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Clientes')
             .then(response => response.json())
             .then(clientes => {
                 // Filtramos para excluir permanentemente de la vista aquellos cuyo ID esté en la lista de eliminados
@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     direccion: document.getElementById('direccion-cliente').value
                 };
 
-                fetch('https://localhost:7137/api/clientes', {
+                fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Registro', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(nuevoCliente)
@@ -742,7 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     direccion: document.getElementById('edit-cliente-direccion').value
                 };
 
-                fetch(`https://localhost:7137/api/clientes/${id}`, {
+                fetch(`https://backendlamichuheladeria.onrender.com/api/Usuarios/Actualizar/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(clienteActualizado)
@@ -861,14 +861,14 @@ case 'pos':
     }
 
     function cargarDatosPOS() {
-        fetch('https://localhost:7137/api/productos')
+        fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Productos')
             .then(res => res.json())
             .then(data => {
                 productosGlobal = data;
                 renderizarDatalistProductos(productosGlobal);
             });
 
-        fetch('https://localhost:7137/api/clientes')
+        fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Clientes')
             .then(res => res.json())
             .then(data => {
                 clientesGlobal = data;
@@ -965,7 +965,7 @@ case 'pos':
 
             const nuevoCliente = { nombre, cedula, telefono, email, direccion };
 
-            fetch('https://localhost:7137/api/clientes', {
+            fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Registro', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nuevoCliente)
@@ -977,7 +977,7 @@ case 'pos':
                     throw new Error('Error al registrar el cliente.');
                 }
             })
-            .then(() => fetch('https://localhost:7137/api/clientes'))
+            .then(() => fetch('https://backendlamichuheladeria.onrender.com/api/Usuarios/Clientes'))
             .then(res => res.json())
             .then(data => {
                 clientesGlobal = data;
@@ -1163,7 +1163,7 @@ case 'pos':
                 }))
             };
 
-            fetch('https://localhost:7137/api/ventas', {
+            fetch('https://backendlamichuheladeria.onrender.com/api/ventas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(ventaData)
@@ -1212,7 +1212,7 @@ case 'pos':
     function cargarVentasDelDia() {
         const fechaLocal = new Date().toLocaleDateString('en-CA');
 
-        fetch(`https://localhost:7137/api/Ventas/PorFecha?fecha=${fechaLocal}`)
+        fetch(`https://backendlamichuheladeria.onrender.com/api/Ventas/PorFecha?fecha=${fechaLocal}`)
             .then(res => res.json())
             .then(ventas => {
                 const contenedor = document.getElementById('contenedor-tabla-ventas');
@@ -1335,7 +1335,7 @@ case 'pos':
         </div>
     `;
 
-    fetch('https://localhost:7137/api/Ventas/ProductoMasVendido')
+    fetch('ProductoMasVendido')
         .then(res => res.json())
         .then(data => {
             const contenedor = document.getElementById('contenedor-producto-general');
@@ -1357,7 +1357,7 @@ case 'pos':
         });
 
     function cargarEstrellaDiario(fechaStr = '') {
-        let url = 'https://localhost:7137/api/Ventas/ProductoMasVendidoDiario';
+        let url = 'https://backendlamichuheladeria.onrender.com/api/Ventas/ProductoMasVendidoDiario';
         if (fechaStr) {
             url += `?fecha=${fechaStr}`;
         }
